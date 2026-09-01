@@ -1,0 +1,30 @@
+feature:
+  id: product-sorting
+  name: Product sorting
+
+  description: >
+    Validar que un usuario autenticado pueda ordenar el listado de productos
+    utilizando las opciones disponibles y que el orden resultante corresponda
+    al criterio seleccionado.
+
+  objective: >
+    Comprobar que el listado de productos se reorganice correctamente al aplicar
+    criterios de ordenamiento por nombre y por precio.
+
+  scope:
+    include:
+      - Ordenar productos por nombre de A a Z
+      - Validar que los nombres queden en orden alfabético ascendente
+      - Ordenar productos por nombre de Z a A
+      - Validar que los nombres queden en orden alfabético descendente
+      - Ordenar productos por precio de menor a mayor
+      - Validar que los precios queden en orden numérico ascendente
+      - Ordenar productos por precio de mayor a menor
+      - Validar que los precios queden en orden numérico descendente
+
+    exclude:
+      - Agregar productos al carrito
+      - Product details
+      - Checkout
+      - Logout
+      - Validar persistencia del criterio de ordenamiento entre sesiones

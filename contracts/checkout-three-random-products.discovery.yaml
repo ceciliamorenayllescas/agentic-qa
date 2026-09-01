@@ -1,0 +1,194 @@
+feature: "Checkout three random products"
+id: "checkout-three-random-products"
+source: "config/checkout-three-random-products-feature.yaml"
+feature_intent:
+  statement: "Comprobar que tres productos seleccionados dinámicamente desde el listado permanezcan correctamente representados durante el carrito y el checkout, y que la compra pueda finalizar satisfactoriamente."
+  evidence: provided
+context:
+preconditions:
+  - id: PRE-DISC-001
+    statement: The environment and any required user state described by the feature must be available.
+    evidence: inferred
+actors:
+  - name: User
+    state: as specified by the feature
+    evidence: inferred
+entry_points:
+  - "The user enters through the application flow described by the feature."
+main_flow:
+  - sequence: 1
+    statement: "Obtener los productos disponibles en el listado"
+    evidence: provided
+  - sequence: 2
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - sequence: 3
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - sequence: 4
+    statement: "Validar que el indicador del carrito refleje tres productos"
+    evidence: provided
+  - sequence: 5
+    statement: "Abrir el carrito"
+    evidence: provided
+  - sequence: 6
+    statement: "Validar que los tres productos seleccionados estén presentes en el carrito"
+    evidence: provided
+  - sequence: 7
+    statement: "Iniciar checkout"
+    evidence: provided
+  - sequence: 8
+    statement: "Completar la información obligatoria del comprador con datos válidos"
+    evidence: provided
+  - sequence: 9
+    statement: "Continuar al checkout overview"
+    evidence: provided
+  - sequence: 10
+    statement: "Validar que los tres productos seleccionados estén presentes en el checkout overview"
+    evidence: provided
+  - sequence: 11
+    statement: "Finalizar la compra"
+    evidence: provided
+  - sequence: 12
+    statement: "Validar que se muestre una confirmación de compra exitosa"
+    evidence: provided
+observable_states:
+  - state: initial
+    evidence: inferred
+  - state: feature outcome described by the specification
+    evidence: provided
+state_transitions:
+  - from: initial
+    to: "feature outcome"
+    trigger: "user performs the specified flow"
+    evidence: inferred
+business_rules_observable:
+  - id: BR-CHECKOUT-001
+    statement: "Obtener los productos disponibles en el listado"
+    evidence: provided
+  - id: BR-CHECKOUT-002
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - id: BR-CHECKOUT-003
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - id: BR-CHECKOUT-004
+    statement: "Validar que el indicador del carrito refleje tres productos"
+    evidence: provided
+  - id: BR-CHECKOUT-005
+    statement: "Abrir el carrito"
+    evidence: provided
+  - id: BR-CHECKOUT-006
+    statement: "Validar que los tres productos seleccionados estén presentes en el carrito"
+    evidence: provided
+  - id: BR-CHECKOUT-007
+    statement: "Iniciar checkout"
+    evidence: provided
+  - id: BR-CHECKOUT-008
+    statement: "Completar la información obligatoria del comprador con datos válidos"
+    evidence: provided
+  - id: BR-CHECKOUT-009
+    statement: "Continuar al checkout overview"
+    evidence: provided
+  - id: BR-CHECKOUT-010
+    statement: "Validar que los tres productos seleccionados estén presentes en el checkout overview"
+    evidence: provided
+  - id: BR-CHECKOUT-011
+    statement: "Finalizar la compra"
+    evidence: provided
+  - id: BR-CHECKOUT-012
+    statement: "Validar que se muestre una confirmación de compra exitosa"
+    evidence: provided
+observed: []
+assumptions:
+  - id: ASM-DISC-001
+    statement: Runtime observations have not been added by this deterministic discovery run.
+    rationale: No live application evidence was supplied to Discovery.
+unknowns:
+  - id: UNK-DISC-001
+    statement: Which boundary values, invalid inputs, or recovery behaviors apply is not defined by the supplied specification.
+    evidence: unknown
+test_areas:
+  - id: TA-CHECKOUT-001
+    name: "State transition"
+    coverage: "The user moves through the specified purchase states and retains relevant selection state."
+    rationale: "The specification describes a multi-step purchase flow."
+  - id: TA-CHECKOUT-002
+    name: "Data handling"
+    coverage: "Visible product, price, quantity, or form data is preserved and represented consistently."
+    rationale: "The specification names user or product data."
+risks:
+  - id: RSK-CHECKOUT-001
+    level: high
+    area: TA-CHECKOUT-001
+    statement: "The state transition may contradict the specified outcome, which would affect the user moves through the specified purchase states and retains relevant selection state.."
+    test_focus: "State transition"
+  - id: RSK-CHECKOUT-002
+    level: medium
+    area: TA-CHECKOUT-002
+    statement: "The data handling may contradict the specified outcome, which would affect visible product, price, quantity, or form data is preserved and represented consistently.."
+    test_focus: "Data handling"
+scenarios:
+  - id: SC-CHECKOUT-001
+    area: TA-CHECKOUT-001
+    type: positive
+    priority: high
+    statement: "Obtener los productos disponibles en el listado | Seleccionar aleatoriamente tres productos diferentes | Agregar los tres productos seleccionados al carrito | Validar que el indicador del carrito refleje tres productos | Abrir el carrito | Validar que los tres productos seleccionados estén presentes en el carrito | Iniciar checkout | Completar la información obligatoria del comprador con datos válidos | Continuar al checkout overview | Validar que los tres productos seleccionados estén presentes en el checkout overview | Finalizar la compra | Validar que se muestre una confirmación de compra exitosa"
+    traces_to: [RQ-CHECKOUT-001, RQ-CHECKOUT-002, RQ-CHECKOUT-003, RQ-CHECKOUT-004, RQ-CHECKOUT-005, RQ-CHECKOUT-006, RQ-CHECKOUT-007, RQ-CHECKOUT-008, RQ-CHECKOUT-009, RQ-CHECKOUT-010, RQ-CHECKOUT-011, RQ-CHECKOUT-012]
+data_considerations:
+  - "Use only data values supplied or observable through the feature flow."
+dependencies:
+  - "The required application environment must be available."
+out_of_scope:
+  - "Seleccionar productos específicos por nombre"
+  - "Ordenamiento de productos"
+  - "Product details"
+  - "Eliminar productos del carrito"
+  - "Modificar cantidades"
+  - "Validación detallada de impuestos"
+  - "Validación matemática del subtotal"
+  - "Persistencia del carrito entre sesiones"
+  - "Checkout con datos inválidos"
+exploratory_charters:
+  - id: EC-CHECKOUT-001
+    mission: "Explore the highest-risk observable behavior of Checkout three random products, including state consistency and specification boundaries."
+    timebox_minutes: 15
+    focus: [SC-CHECKOUT-001]
+    note: Record observed behavior separately; inferred concerns and unknowns are not defects without evidence.
+requirements:
+  - id: RQ-CHECKOUT-001
+    statement: "Obtener los productos disponibles en el listado"
+    evidence: provided
+  - id: RQ-CHECKOUT-002
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - id: RQ-CHECKOUT-003
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - id: RQ-CHECKOUT-004
+    statement: "Validar que el indicador del carrito refleje tres productos"
+    evidence: provided
+  - id: RQ-CHECKOUT-005
+    statement: "Abrir el carrito"
+    evidence: provided
+  - id: RQ-CHECKOUT-006
+    statement: "Validar que los tres productos seleccionados estén presentes en el carrito"
+    evidence: provided
+  - id: RQ-CHECKOUT-007
+    statement: "Iniciar checkout"
+    evidence: provided
+  - id: RQ-CHECKOUT-008
+    statement: "Completar la información obligatoria del comprador con datos válidos"
+    evidence: provided
+  - id: RQ-CHECKOUT-009
+    statement: "Continuar al checkout overview"
+    evidence: provided
+  - id: RQ-CHECKOUT-010
+    statement: "Validar que los tres productos seleccionados estén presentes en el checkout overview"
+    evidence: provided
+  - id: RQ-CHECKOUT-011
+    statement: "Finalizar la compra"
+    evidence: provided
+  - id: RQ-CHECKOUT-012
+    statement: "Validar que se muestre una confirmación de compra exitosa"
+    evidence: provided

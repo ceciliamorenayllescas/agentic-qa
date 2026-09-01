@@ -1,0 +1,133 @@
+{
+  "feature": "cart-management",
+  "test_cases": [
+    {
+      "id": "TC-CARTMANA-001",
+      "title": "Add three distinct products and remove one while preserving cart state",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The application is available at the configured test base URL.",
+        "A user can establish the authenticated state required by the feature through the visible login flow.",
+        "The authenticated product listing exposes at least three selectable products."
+      ],
+      "traceability": [
+        "RQ-CARTMANA-001",
+        "RQ-CARTMANA-002",
+        "RQ-CARTMANA-003",
+        "RQ-CARTMANA-004",
+        "RQ-CARTMANA-005",
+        "RQ-CARTMANA-006",
+        "RQ-CARTMANA-007",
+        "RQ-CARTMANA-008",
+        "RQ-CARTMANA-009",
+        "RQ-CARTMANA-010",
+        "RQ-CARTMANA-011",
+        "SC-CARTMANA-001",
+        "RSK-CARTMANA-001",
+        "EC-CARTMANA-001"
+      ],
+      "test_data_requirements": [
+        "Use only products currently visible in the authenticated product listing and select exactly three different products at runtime.",
+        "Retain the three selected product names as selectedProductNames, retain the removed product name as removedProductName, and retain the other two names as remainingProductNames for later comparisons.",
+        "Do not rely on fixed product names; the exploratory observation of Sauce Labs Backpack and Sauce Labs Bike Light is evidence of available runtime data, not a required data set."
+      ],
+      "steps": [
+        {
+          "action": "Authenticate through the visible login flow.",
+          "expected_result": "The authenticated product listing is displayed."
+        },
+        {
+          "action": "Read the products currently visible in the product listing as visibleProducts.",
+          "operation": "read_collection",
+          "variable": "visibleProducts",
+          "value_type": "string",
+          "collection": "visible product names",
+          "expected_result": "visibleProducts contains the products available for selection in the listing."
+        },
+        {
+          "action": "Select exactly three different products at runtime from visibleProducts and retain their names as selectedProductNames.",
+          "variable": "selectedProductNames",
+          "value_type": "string",
+          "expected_result": "selectedProductNames contains exactly three distinct product names that were visible in the listing."
+        },
+        {
+          "action": "Add each product in selectedProductNames to the cart.",
+          "expected_result": "Each selected product is added through the visible product-listing flow."
+        },
+        {
+          "action": "Inspect the visible cart quantity indicator.",
+          "expected_result": "The cart quantity indicator visibly reflects 3 products."
+        },
+        {
+          "action": "Open the cart through the visible cart entry.",
+          "expected_result": "The cart page is displayed."
+        },
+        {
+          "action": "Read the product names visible in the cart as cartProductNames.",
+          "operation": "read_collection",
+          "variable": "cartProductNames",
+          "value_type": "string",
+          "collection": "visible cart product names",
+          "expected_result": "cartProductNames contains the products currently represented in the cart."
+        },
+        {
+          "action": "Compare cartProductNames with selectedProductNames.",
+          "expected_result": "The cart visibly contains the same three distinct product names selected from the listing."
+        },
+        {
+          "action": "Select one product from selectedProductNames as removedProductName and retain the other two as remainingProductNames.",
+          "variable": "removedProductName",
+          "value_type": "string",
+          "expected_result": "removedProductName is one selected product name, and remainingProductNames contains the other two selected product names."
+        },
+        {
+          "action": "Remove removedProductName using its visible cart action.",
+          "expected_result": "The selected product is removed from the visible cart."
+        },
+        {
+          "action": "Read the product names visible in the cart after removal as postRemovalProductNames.",
+          "operation": "read_collection",
+          "variable": "postRemovalProductNames",
+          "value_type": "string",
+          "collection": "visible cart product names after removal",
+          "expected_result": "postRemovalProductNames contains the products currently represented in the cart after the removal."
+        },
+        {
+          "action": "Compare postRemovalProductNames with removedProductName and remainingProductNames.",
+          "expected_result": "removedProductName is not visible in the cart, and both products in remainingProductNames remain visible."
+        },
+        {
+          "action": "Inspect the visible cart quantity indicator after removal.",
+          "expected_result": "The cart quantity indicator visibly reflects 2 products."
+        }
+      ],
+      "expected_results": [
+        "Three distinct products selected at runtime from the authenticated listing are represented in the cart.",
+        "The cart quantity indicator visibly reflects 3 products before removal.",
+        "After removing one selected product, that product is no longer visible, the other two selected products remain visible, and the cart quantity indicator visibly reflects 2 products."
+      ]
+    }
+  ],
+  "metadata": {
+    "mode": "codex_cli",
+    "evidence_basis": "The feature and Discovery specify the complete three-product add/remove flow. Exploration observed authenticated listing access, visible cart representation, and quantity updates for two products, but did not verify the three-product state or the specified post-removal assertions.",
+    "observed_evidence": [
+      "artifacts/exploratory/cart-management/01-product-listing.png",
+      "artifacts/exploratory/cart-management/cart-state-1.png",
+      "artifacts/exploratory/cart-management/cart-state-2.png",
+      "artifacts/exploratory/cart-management/cart-state-3.png"
+    ],
+    "unknowns_preserved": [
+      "UNK-DISC-001"
+    ]
+  },
+  "test_design_metadata": {
+    "mode": "codex_cli",
+    "client": "codex_cli",
+    "api_calls": 0,
+    "api_cost_usd": 0,
+    "model": "not asserted by workflow",
+    "tokens": "not asserted by workflow"
+  }
+}

@@ -1,0 +1,174 @@
+feature: "Cart management"
+id: "cart-management"
+source: "config/cart-management-feature.yaml"
+feature_intent:
+  statement: "Comprobar que el carrito refleje correctamente las operaciones de agregado y eliminación de productos, manteniendo los productos restantes y actualizando el indicador de cantidad."
+  evidence: provided
+context:
+preconditions:
+  - id: PRE-DISC-001
+    statement: The environment and any required user state described by the feature must be available.
+    evidence: inferred
+actors:
+  - name: User
+    state: as specified by the feature
+    evidence: inferred
+entry_points:
+  - "The user enters through the application flow described by the feature."
+main_flow:
+  - sequence: 1
+    statement: "Obtener los productos disponibles en el inventario"
+    evidence: provided
+  - sequence: 2
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - sequence: 3
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - sequence: 4
+    statement: "Validar que el indicador del carrito muestre tres productos"
+    evidence: provided
+  - sequence: 5
+    statement: "Abrir el carrito"
+    evidence: provided
+  - sequence: 6
+    statement: "Validar que los tres productos seleccionados estén presentes"
+    evidence: provided
+  - sequence: 7
+    statement: "Seleccionar uno de los productos previamente agregados"
+    evidence: provided
+  - sequence: 8
+    statement: "Eliminar ese producto del carrito"
+    evidence: provided
+  - sequence: 9
+    statement: "Validar que el producto eliminado ya no esté presente"
+    evidence: provided
+  - sequence: 10
+    statement: "Validar que los otros dos productos permanezcan en el carrito"
+    evidence: provided
+  - sequence: 11
+    statement: "Validar que el indicador del carrito se actualice a dos productos"
+    evidence: provided
+observable_states:
+  - state: initial
+    evidence: inferred
+  - state: feature outcome described by the specification
+    evidence: provided
+state_transitions:
+  - from: initial
+    to: "feature outcome"
+    trigger: "user performs the specified flow"
+    evidence: inferred
+business_rules_observable:
+  - id: BR-CARTMANA-001
+    statement: "Obtener los productos disponibles en el inventario"
+    evidence: provided
+  - id: BR-CARTMANA-002
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - id: BR-CARTMANA-003
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - id: BR-CARTMANA-004
+    statement: "Validar que el indicador del carrito muestre tres productos"
+    evidence: provided
+  - id: BR-CARTMANA-005
+    statement: "Abrir el carrito"
+    evidence: provided
+  - id: BR-CARTMANA-006
+    statement: "Validar que los tres productos seleccionados estén presentes"
+    evidence: provided
+  - id: BR-CARTMANA-007
+    statement: "Seleccionar uno de los productos previamente agregados"
+    evidence: provided
+  - id: BR-CARTMANA-008
+    statement: "Eliminar ese producto del carrito"
+    evidence: provided
+  - id: BR-CARTMANA-009
+    statement: "Validar que el producto eliminado ya no esté presente"
+    evidence: provided
+  - id: BR-CARTMANA-010
+    statement: "Validar que los otros dos productos permanezcan en el carrito"
+    evidence: provided
+  - id: BR-CARTMANA-011
+    statement: "Validar que el indicador del carrito se actualice a dos productos"
+    evidence: provided
+observed: []
+assumptions:
+  - id: ASM-DISC-001
+    statement: Runtime observations have not been added by this deterministic discovery run.
+    rationale: No live application evidence was supplied to Discovery.
+unknowns:
+  - id: UNK-DISC-001
+    statement: Which boundary values, invalid inputs, or recovery behaviors apply is not defined by the supplied specification.
+    evidence: unknown
+test_areas:
+  - id: TA-CARTMANA-001
+    name: "Data handling"
+    coverage: "Visible product, price, quantity, or form data is preserved and represented consistently."
+    rationale: "The specification names user or product data."
+risks:
+  - id: RSK-CARTMANA-001
+    level: high
+    area: TA-CARTMANA-001
+    statement: "The data handling may contradict the specified outcome, which would affect visible product, price, quantity, or form data is preserved and represented consistently.."
+    test_focus: "Data handling"
+scenarios:
+  - id: SC-CARTMANA-001
+    area: TA-CARTMANA-001
+    type: positive
+    priority: high
+    statement: "Obtener los productos disponibles en el inventario | Seleccionar aleatoriamente tres productos diferentes | Agregar los tres productos seleccionados al carrito | Validar que el indicador del carrito muestre tres productos | Abrir el carrito | Validar que los tres productos seleccionados estén presentes | Seleccionar uno de los productos previamente agregados | Eliminar ese producto del carrito | Validar que el producto eliminado ya no esté presente | Validar que los otros dos productos permanezcan en el carrito | Validar que el indicador del carrito se actualice a dos productos"
+    traces_to: [RQ-CARTMANA-001, RQ-CARTMANA-002, RQ-CARTMANA-003, RQ-CARTMANA-004, RQ-CARTMANA-005, RQ-CARTMANA-006, RQ-CARTMANA-007, RQ-CARTMANA-008, RQ-CARTMANA-009, RQ-CARTMANA-010, RQ-CARTMANA-011]
+data_considerations:
+  - "Use only data values supplied or observable through the feature flow."
+dependencies:
+  - "The required application environment must be available."
+out_of_scope:
+  - "Checkout"
+  - "Product details"
+  - "Ordenamiento de productos"
+  - "Modificar cantidades"
+  - "Vaciar completamente el carrito"
+  - "Persistencia del carrito entre sesiones"
+  - "Logout"
+exploratory_charters:
+  - id: EC-CARTMANA-001
+    mission: "Explore the highest-risk observable behavior of Cart management, including state consistency and specification boundaries."
+    timebox_minutes: 15
+    focus: [SC-CARTMANA-001]
+    note: Record observed behavior separately; inferred concerns and unknowns are not defects without evidence.
+requirements:
+  - id: RQ-CARTMANA-001
+    statement: "Obtener los productos disponibles en el inventario"
+    evidence: provided
+  - id: RQ-CARTMANA-002
+    statement: "Seleccionar aleatoriamente tres productos diferentes"
+    evidence: provided
+  - id: RQ-CARTMANA-003
+    statement: "Agregar los tres productos seleccionados al carrito"
+    evidence: provided
+  - id: RQ-CARTMANA-004
+    statement: "Validar que el indicador del carrito muestre tres productos"
+    evidence: provided
+  - id: RQ-CARTMANA-005
+    statement: "Abrir el carrito"
+    evidence: provided
+  - id: RQ-CARTMANA-006
+    statement: "Validar que los tres productos seleccionados estén presentes"
+    evidence: provided
+  - id: RQ-CARTMANA-007
+    statement: "Seleccionar uno de los productos previamente agregados"
+    evidence: provided
+  - id: RQ-CARTMANA-008
+    statement: "Eliminar ese producto del carrito"
+    evidence: provided
+  - id: RQ-CARTMANA-009
+    statement: "Validar que el producto eliminado ya no esté presente"
+    evidence: provided
+  - id: RQ-CARTMANA-010
+    statement: "Validar que los otros dos productos permanezcan en el carrito"
+    evidence: provided
+  - id: RQ-CARTMANA-011
+    statement: "Validar que el indicador del carrito se actualice a dos productos"
+    evidence: provided

@@ -1,0 +1,79 @@
+{
+  "feature": "product-details-navigation",
+  "test_cases": [
+    {
+      "id": "TC-PRODUCTD-001",
+      "title": "Navigate from a product listing to matching product detail and back",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The SauceDemo application is available.",
+        "A user can establish the authenticated state required by the feature through the visible login flow."
+      ],
+      "traceability": [
+        "RQ-PRODUCTD-001",
+        "SC-PRODUCTD-001"
+      ],
+      "test_data_requirements": [
+        "Select one product that is visibly present in the product listing and retain its displayed name and price as runtime reference values.",
+        "The exploratory session observed Sauce Labs Backpack with a displayed price of $29.99; the test must compare the values captured at runtime rather than assume a fixed catalog value."
+      ],
+      "steps": [
+        {
+          "action": "Authenticate through the visible login flow.",
+          "expected_result": "The authenticated product listing is displayed."
+        },
+        {
+          "action": "Select one visible product from the product listing.",
+          "expected_result": "The selected product's detail view is displayed."
+        },
+        {
+          "action": "Capture the selected product name from the listing as the runtime reference productName.",
+          "variable": "productName",
+          "value_type": "string",
+          "expected_result": "productName contains the selected product name visible in the listing."
+        },
+        {
+          "action": "Capture the selected product price from the listing as the runtime reference productPrice.",
+          "variable": "productPrice",
+          "value_type": "string",
+          "expected_result": "productPrice contains the selected product price visible in the listing."
+        },
+        {
+          "action": "Inspect the product detail view for the selected product.",
+          "expected_result": "The product detail view visibly contains a product name and a product price."
+        },
+        {
+          "action": "Compare the product name in the detail view with productName.",
+          "expected_result": "The detail-view product name exactly matches productName."
+        },
+        {
+          "action": "Compare the product price in the detail view with productPrice.",
+          "expected_result": "The detail-view product price exactly matches productPrice."
+        },
+        {
+          "action": "Return to the product listing using the browser's back navigation.",
+          "expected_result": "The browser returns to the product-listing page."
+        },
+        {
+          "action": "Inspect the product-listing page after returning.",
+          "expected_result": "The product listing is visible again at https://www.saucedemo.com/inventory.html."
+        }
+      ],
+      "expected_results": [
+        "An authenticated user can open a visible product's detail view from the product listing.",
+        "The detail-view product name matches the name captured for the selected listing item.",
+        "The detail-view product price matches the price captured for the selected listing item.",
+        "Returning from the detail view makes the product listing visible again at https://www.saucedemo.com/inventory.html."
+      ]
+    }
+  ],
+  "test_design_metadata": {
+    "mode": "codex_cli",
+    "client": "codex_cli",
+    "api_calls": 0,
+    "api_cost_usd": 0,
+    "model": "not asserted by workflow",
+    "tokens": "not asserted by workflow"
+  }
+}

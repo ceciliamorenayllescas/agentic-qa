@@ -1,0 +1,38 @@
+feature:
+  id: checkout-three-random-products
+  name: Checkout three random products
+
+  description: >
+    Validar que un usuario autenticado pueda seleccionar tres productos diferentes
+    del inventario, agregarlos al carrito y completar exitosamente el proceso de checkout.
+
+  objective: >
+    Comprobar que tres productos seleccionados dinámicamente desde el listado
+    permanezcan correctamente representados durante el carrito y el checkout,
+    y que la compra pueda finalizar satisfactoriamente.
+
+  scope:
+    include:
+      - Obtener los productos disponibles en el listado
+      - Seleccionar aleatoriamente tres productos diferentes
+      - Agregar los tres productos seleccionados al carrito
+      - Validar que el indicador del carrito refleje tres productos
+      - Abrir el carrito
+      - Validar que los tres productos seleccionados estén presentes en el carrito
+      - Iniciar checkout
+      - Completar la información obligatoria del comprador con datos válidos
+      - Continuar al checkout overview
+      - Validar que los tres productos seleccionados estén presentes en el checkout overview
+      - Finalizar la compra
+      - Validar que se muestre una confirmación de compra exitosa
+
+    exclude:
+      - Seleccionar productos específicos por nombre
+      - Ordenamiento de productos
+      - Product details
+      - Eliminar productos del carrito
+      - Modificar cantidades
+      - Validación detallada de impuestos
+      - Validación matemática del subtotal
+      - Persistencia del carrito entre sesiones
+      - Checkout con datos inválidos

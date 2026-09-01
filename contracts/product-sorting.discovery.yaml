@@ -1,0 +1,178 @@
+feature: "Product sorting"
+id: "product-sorting"
+source: "config/product-sorting-feature.yaml"
+feature_intent:
+  statement: "Comprobar que el listado de productos se reorganice correctamente al aplicar criterios de ordenamiento por nombre y por precio."
+  evidence: provided
+context:
+preconditions:
+  - id: PRE-DISC-001
+    statement: The environment and any required user state described by the feature must be available.
+    evidence: inferred
+actors:
+  - name: User
+    state: as specified by the feature
+    evidence: inferred
+entry_points:
+  - "The user enters through the application flow described by the feature."
+main_flow:
+  - sequence: 1
+    statement: "Ordenar productos por nombre de A a Z"
+    evidence: provided
+  - sequence: 2
+    statement: "Validar que los nombres queden en orden alfabético ascendente"
+    evidence: provided
+  - sequence: 3
+    statement: "Ordenar productos por nombre de Z a A"
+    evidence: provided
+  - sequence: 4
+    statement: "Validar que los nombres queden en orden alfabético descendente"
+    evidence: provided
+  - sequence: 5
+    statement: "Ordenar productos por precio de menor a mayor"
+    evidence: provided
+  - sequence: 6
+    statement: "Validar que los precios queden en orden numérico ascendente"
+    evidence: provided
+  - sequence: 7
+    statement: "Ordenar productos por precio de mayor a menor"
+    evidence: provided
+  - sequence: 8
+    statement: "Validar que los precios queden en orden numérico descendente"
+    evidence: provided
+observable_states:
+  - state: initial
+    evidence: inferred
+  - state: feature outcome described by the specification
+    evidence: provided
+state_transitions:
+  - from: initial
+    to: "feature outcome"
+    trigger: "user performs the specified flow"
+    evidence: inferred
+business_rules_observable:
+  - id: BR-PRODUCTS-001
+    statement: "Ordenar productos por nombre de A a Z"
+    evidence: provided
+  - id: BR-PRODUCTS-002
+    statement: "Validar que los nombres queden en orden alfabético ascendente"
+    evidence: provided
+  - id: BR-PRODUCTS-003
+    statement: "Ordenar productos por nombre de Z a A"
+    evidence: provided
+  - id: BR-PRODUCTS-004
+    statement: "Validar que los nombres queden en orden alfabético descendente"
+    evidence: provided
+  - id: BR-PRODUCTS-005
+    statement: "Ordenar productos por precio de menor a mayor"
+    evidence: provided
+  - id: BR-PRODUCTS-006
+    statement: "Validar que los precios queden en orden numérico ascendente"
+    evidence: provided
+  - id: BR-PRODUCTS-007
+    statement: "Ordenar productos por precio de mayor a menor"
+    evidence: provided
+  - id: BR-PRODUCTS-008
+    statement: "Validar que los precios queden en orden numérico descendente"
+    evidence: provided
+observed: []
+assumptions:
+  - id: ASM-DISC-001
+    statement: Runtime observations have not been added by this deterministic discovery run.
+    rationale: No live application evidence was supplied to Discovery.
+unknowns:
+  - id: UNK-DISC-001
+    statement: Which boundary values, invalid inputs, or recovery behaviors apply is not defined by the supplied specification.
+    evidence: unknown
+  - id: UNK-DISC-002
+    statement: Whether string comparison is case-sensitive is not defined.
+    evidence: unknown
+  - id: UNK-DISC-003
+    statement: The behavior for an empty or single-item collection is not defined.
+    evidence: unknown
+test_areas:
+  - id: TA-PRODUCTS-001
+    name: "Functional behavior"
+    coverage: "Each specified ordering variant produces the requested observable sequence."
+    rationale: "The specification names ordering variants."
+  - id: TA-PRODUCTS-002
+    name: "Data handling"
+    coverage: "Visible product, price, quantity, or form data is preserved and represented consistently."
+    rationale: "The specification names user or product data."
+risks:
+  - id: RSK-PRODUCTS-001
+    level: high
+    area: TA-PRODUCTS-001
+    statement: "The functional behavior may contradict the specified outcome, which would affect each specified ordering variant produces the requested observable sequence.."
+    test_focus: "Functional behavior"
+  - id: RSK-PRODUCTS-002
+    level: medium
+    area: TA-PRODUCTS-002
+    statement: "The data handling may contradict the specified outcome, which would affect visible product, price, quantity, or form data is preserved and represented consistently.."
+    test_focus: "Data handling"
+scenarios:
+  - id: SC-PRODUCTS-001
+    area: TA-PRODUCTS-001
+    type: positive
+    priority: high
+    statement: "Sort the collection by name ascending and observe the resulting order."
+    traces_to: [RQ-PRODUCTS-001, RQ-PRODUCTS-002, RQ-PRODUCTS-003, RQ-PRODUCTS-004, RQ-PRODUCTS-005, RQ-PRODUCTS-006, RQ-PRODUCTS-007, RQ-PRODUCTS-008]
+  - id: SC-PRODUCTS-002
+    area: TA-PRODUCTS-001
+    type: positive
+    priority: high
+    statement: "Sort the collection by name descending and observe the resulting order."
+    traces_to: [RQ-PRODUCTS-001, RQ-PRODUCTS-002, RQ-PRODUCTS-003, RQ-PRODUCTS-004, RQ-PRODUCTS-005, RQ-PRODUCTS-006, RQ-PRODUCTS-007, RQ-PRODUCTS-008]
+  - id: SC-PRODUCTS-003
+    area: TA-PRODUCTS-001
+    type: positive
+    priority: high
+    statement: "Sort the collection by price ascending and observe the resulting order."
+    traces_to: [RQ-PRODUCTS-001, RQ-PRODUCTS-002, RQ-PRODUCTS-003, RQ-PRODUCTS-004, RQ-PRODUCTS-005, RQ-PRODUCTS-006, RQ-PRODUCTS-007, RQ-PRODUCTS-008]
+  - id: SC-PRODUCTS-004
+    area: TA-PRODUCTS-001
+    type: positive
+    priority: high
+    statement: "Sort the collection by price descending and observe the resulting order."
+    traces_to: [RQ-PRODUCTS-001, RQ-PRODUCTS-002, RQ-PRODUCTS-003, RQ-PRODUCTS-004, RQ-PRODUCTS-005, RQ-PRODUCTS-006, RQ-PRODUCTS-007, RQ-PRODUCTS-008]
+data_considerations:
+  - "Visible numeric values may require normalization before comparison; the representation is not assumed."
+dependencies:
+  - "The required application environment must be available."
+out_of_scope:
+  - "Agregar productos al carrito"
+  - "Product details"
+  - "Checkout"
+  - "Logout"
+  - "Validar persistencia del criterio de ordenamiento entre sesiones"
+exploratory_charters:
+  - id: EC-PRODUCTS-001
+    mission: "Explore the highest-risk observable behavior of Product sorting, including state consistency and specification boundaries."
+    timebox_minutes: 15
+    focus: [SC-PRODUCTS-001, SC-PRODUCTS-002, SC-PRODUCTS-003, SC-PRODUCTS-004]
+    note: Record observed behavior separately; inferred concerns and unknowns are not defects without evidence.
+requirements:
+  - id: RQ-PRODUCTS-001
+    statement: "Ordenar productos por nombre de A a Z"
+    evidence: provided
+  - id: RQ-PRODUCTS-002
+    statement: "Validar que los nombres queden en orden alfabético ascendente"
+    evidence: provided
+  - id: RQ-PRODUCTS-003
+    statement: "Ordenar productos por nombre de Z a A"
+    evidence: provided
+  - id: RQ-PRODUCTS-004
+    statement: "Validar que los nombres queden en orden alfabético descendente"
+    evidence: provided
+  - id: RQ-PRODUCTS-005
+    statement: "Ordenar productos por precio de menor a mayor"
+    evidence: provided
+  - id: RQ-PRODUCTS-006
+    statement: "Validar que los precios queden en orden numérico ascendente"
+    evidence: provided
+  - id: RQ-PRODUCTS-007
+    statement: "Ordenar productos por precio de mayor a menor"
+    evidence: provided
+  - id: RQ-PRODUCTS-008
+    statement: "Validar que los precios queden en orden numérico descendente"
+    evidence: provided

@@ -1,0 +1,252 @@
+{
+  "feature": "product-sorting",
+  "test_cases": [
+    {
+      "id": "TC-PRODUCTS-001",
+      "title": "Sort the visible product listing by name from A to Z",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The SauceDemo application is available.",
+        "The user has established the authenticated state through the visible login flow and the product listing is displayed."
+      ],
+      "traceability": [
+        "RQ-PRODUCTS-001",
+        "RQ-PRODUCTS-002",
+        "SC-PRODUCTS-001",
+        "BR-PRODUCTS-001",
+        "BR-PRODUCTS-002",
+        "RSK-PRODUCTS-001"
+      ],
+      "test_data_requirements": [
+        "Use the products currently visible in the listing; do not assume a fixed catalog or fixed initial order.",
+        "Retain the visible product names before sorting so the post-sort collection can be checked for the same visible products."
+      ],
+      "steps": [
+        {
+          "action": "Read and retain the names of all products currently visible in the product listing as runtime collection productsBeforeSort.",
+          "operation": "read_collection",
+          "variable": "productsBeforeSort",
+          "value_type": "string",
+          "collection": "visible product names",
+          "expected_result": "productsBeforeSort contains the visible product names in their current displayed order."
+        },
+        {
+          "action": "Choose the visible product-list sorting option for name A to Z.",
+          "operation": "select_option",
+          "value": "name A to Z",
+          "expected_result": "The product listing updates to the selected name-sorting criterion."
+        },
+        {
+          "action": "Read and retain the names of all products visible after sorting as runtime collection productsAfterSort.",
+          "operation": "read_collection",
+          "variable": "productsAfterSort",
+          "value_type": "string",
+          "collection": "visible product names",
+          "expected_result": "productsAfterSort contains the visible product names after the sorting operation."
+        },
+        {
+          "action": "Compare productsAfterSort with productsBeforeSort and check the name order.",
+          "operation": "assert_collection_order",
+          "collection": "productsAfterSort",
+          "order": "ascending",
+          "expected_result": "The visible product names are in ascending alphabetical order, and the visible product collection remains present."
+        }
+      ],
+      "expected_results": [
+        "Selecting name A to Z produces a visible product listing whose names are in ascending alphabetical order.",
+        "The sorting operation does not remove or add a visible product in the observed collection."
+      ]
+    },
+    {
+      "id": "TC-PRODUCTS-002",
+      "title": "Sort the visible product listing by name from Z to A",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The SauceDemo application is available.",
+        "The user has established the authenticated state through the visible login flow and the product listing is displayed."
+      ],
+      "traceability": [
+        "RQ-PRODUCTS-003",
+        "RQ-PRODUCTS-004",
+        "SC-PRODUCTS-002",
+        "BR-PRODUCTS-003",
+        "BR-PRODUCTS-004",
+        "RSK-PRODUCTS-001"
+      ],
+      "test_data_requirements": [
+        "Use the products currently visible in the listing; do not assume a fixed catalog or fixed initial order.",
+        "Retain the visible product names before sorting so the post-sort collection can be checked for the same visible products."
+      ],
+      "steps": [
+        {
+          "action": "Read and retain the names of all products currently visible in the product listing as runtime collection productsBeforeSort.",
+          "operation": "read_collection",
+          "variable": "productsBeforeSort",
+          "value_type": "string",
+          "collection": "visible product names",
+          "expected_result": "productsBeforeSort contains the visible product names in their current displayed order."
+        },
+        {
+          "action": "Choose the visible product-list sorting option for name Z to A.",
+          "operation": "select_option",
+          "value": "name Z to A",
+          "expected_result": "The product listing updates to the selected name-sorting criterion."
+        },
+        {
+          "action": "Read and retain the names of all products visible after sorting as runtime collection productsAfterSort.",
+          "operation": "read_collection",
+          "variable": "productsAfterSort",
+          "value_type": "string",
+          "collection": "visible product names",
+          "expected_result": "productsAfterSort contains the visible product names after the sorting operation."
+        },
+        {
+          "action": "Compare productsAfterSort with productsBeforeSort and check the name order.",
+          "operation": "assert_collection_order",
+          "collection": "productsAfterSort",
+          "order": "descending",
+          "expected_result": "The visible product names are in descending alphabetical order, and the visible product collection remains present."
+        }
+      ],
+      "expected_results": [
+        "Selecting name Z to A produces a visible product listing whose names are in descending alphabetical order.",
+        "The sorting operation does not remove or add a visible product in the observed collection."
+      ]
+    },
+    {
+      "id": "TC-PRODUCTS-003",
+      "title": "Sort the visible product listing by price from low to high",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The SauceDemo application is available.",
+        "The user has established the authenticated state through the visible login flow and the product listing is displayed."
+      ],
+      "traceability": [
+        "RQ-PRODUCTS-005",
+        "RQ-PRODUCTS-006",
+        "SC-PRODUCTS-003",
+        "BR-PRODUCTS-005",
+        "BR-PRODUCTS-006",
+        "RSK-PRODUCTS-001",
+        "RSK-PRODUCTS-002"
+      ],
+      "test_data_requirements": [
+        "Use the prices currently displayed for the visible products; do not assume fixed catalog values or currency formatting.",
+        "Retain the visible product names and prices before sorting, and compare displayed prices by their numeric values after ignoring presentation-only currency formatting."
+      ],
+      "steps": [
+        {
+          "action": "Read and retain all visible product names and displayed prices as runtime collection productsBeforeSort.",
+          "operation": "read_collection",
+          "variable": "productsBeforeSort",
+          "value_type": "string",
+          "collection": "visible product names and prices",
+          "expected_result": "productsBeforeSort contains each visible product with its displayed price captured for runtime comparison."
+        },
+        {
+          "action": "Choose the visible product-list sorting option for price low to high.",
+          "operation": "select_option",
+          "value": "price low to high",
+          "expected_result": "The product listing updates to the selected price-sorting criterion."
+        },
+        {
+          "action": "Read and retain all visible product names and displayed prices after sorting as runtime collection productsAfterSort.",
+          "operation": "read_collection",
+          "variable": "productsAfterSort",
+          "value_type": "string",
+          "collection": "visible product prices",
+          "expected_result": "productsAfterSort contains the visible product prices after the sorting operation."
+        },
+        {
+          "action": "Compare productsAfterSort with productsBeforeSort and check the numeric price order.",
+          "operation": "assert_collection_order",
+          "collection": "productsAfterSort",
+          "order": "ascending",
+          "expected_result": "The visible product prices are in ascending numeric order, and the visible product collection remains present."
+        }
+      ],
+      "expected_results": [
+        "Selecting price low to high produces a visible product listing whose displayed prices are in ascending numeric order.",
+        "The product-to-price associations remain visible and the sorting operation does not remove or add a visible product."
+      ]
+    },
+    {
+      "id": "TC-PRODUCTS-004",
+      "title": "Sort the visible product listing by price from high to low",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The SauceDemo application is available.",
+        "The user has established the authenticated state through the visible login flow and the product listing is displayed."
+      ],
+      "traceability": [
+        "RQ-PRODUCTS-007",
+        "RQ-PRODUCTS-008",
+        "SC-PRODUCTS-004",
+        "BR-PRODUCTS-007",
+        "BR-PRODUCTS-008",
+        "RSK-PRODUCTS-001",
+        "RSK-PRODUCTS-002"
+      ],
+      "test_data_requirements": [
+        "Use the prices currently displayed for the visible products; do not assume fixed catalog values or currency formatting.",
+        "Retain the visible product names and prices before sorting, and compare displayed prices by their numeric values after ignoring presentation-only currency formatting."
+      ],
+      "steps": [
+        {
+          "action": "Read and retain all visible product names and displayed prices as runtime collection productsBeforeSort.",
+          "operation": "read_collection",
+          "variable": "productsBeforeSort",
+          "value_type": "string",
+          "collection": "visible product names and prices",
+          "expected_result": "productsBeforeSort contains each visible product with its displayed price captured for runtime comparison."
+        },
+        {
+          "action": "Choose the visible product-list sorting option for price high to low.",
+          "operation": "select_option",
+          "value": "price high to low",
+          "expected_result": "The product listing updates to the selected price-sorting criterion."
+        },
+        {
+          "action": "Read and retain all visible product names and displayed prices after sorting as runtime collection productsAfterSort.",
+          "operation": "read_collection",
+          "variable": "productsAfterSort",
+          "value_type": "string",
+          "collection": "visible product prices",
+          "expected_result": "productsAfterSort contains the visible product prices after the sorting operation."
+        },
+        {
+          "action": "Compare productsAfterSort with productsBeforeSort and check the numeric price order.",
+          "operation": "assert_collection_order",
+          "collection": "productsAfterSort",
+          "order": "descending",
+          "expected_result": "The visible product prices are in descending numeric order, and the visible product collection remains present."
+        }
+      ],
+      "expected_results": [
+        "Selecting price high to low produces a visible product listing whose displayed prices are in descending numeric order.",
+        "The product-to-price associations remain visible and the sorting operation does not remove or add a visible product."
+      ]
+    }
+  ],
+  "metadata": {
+    "mode": "codex_cli",
+    "evidence_basis": "Feature and Discovery are provided; Exploration observed authenticated product listing access and Sauce Labs Backpack but no sorting outcome or runtime values.",
+    "unknowns_preserved": [
+      "UNK-DISC-001",
+      "UNK-DISC-002",
+      "UNK-DISC-003"
+    ]
+  },
+  "test_design_metadata": {
+    "mode": "codex_cli",
+    "client": "codex_cli",
+    "api_calls": 0,
+    "api_cost_usd": 0,
+    "model": "not asserted by workflow",
+    "tokens": "not asserted by workflow"
+  }
+}

@@ -1,0 +1,69 @@
+feature: "product-details-navigation"
+id: "product-details-navigation"
+source: "config/product-details-navigation-feature.yaml"
+feature_intent:
+  statement: "Feature behavior is described by the supplied feature specification."
+  evidence: provided
+context:
+preconditions:
+  - id: PRE-DISC-001
+    statement: The environment and any required user state described by the feature must be available.
+    evidence: inferred
+actors:
+  - name: User
+    state: as specified by the feature
+    evidence: inferred
+entry_points:
+  - "The user enters through the application flow described by the feature."
+main_flow:
+  - sequence: 1
+    statement: "Feature behavior is described by the supplied feature specification."
+    evidence: provided
+observable_states:
+  - state: initial
+    evidence: inferred
+  - state: feature outcome described by the specification
+    evidence: provided
+state_transitions:
+  - from: initial
+    to: "feature outcome"
+    trigger: "user performs the specified flow"
+    evidence: inferred
+business_rules_observable:
+  - id: BR-PRODUCTD-001
+    statement: "Feature behavior is described by the supplied feature specification."
+    evidence: provided
+observed: []
+assumptions:
+  - id: ASM-DISC-001
+    statement: Runtime observations have not been added by this deterministic discovery run.
+    rationale: No live application evidence was supplied to Discovery.
+unknowns:
+  - id: UNK-DISC-001
+    statement: Which boundary values, invalid inputs, or recovery behaviors apply is not defined by the supplied specification.
+    evidence: unknown
+test_areas:
+risks:
+scenarios:
+  - id: SC-PRODUCTD-001
+    area: TA-PRODUCTD-001
+    type: positive
+    priority: high
+    statement: "Feature behavior is described by the supplied feature specification."
+    traces_to: [RQ-PRODUCTD-001]
+data_considerations:
+  - "Use only data values supplied or observable through the feature flow."
+dependencies:
+  - "The required application environment must be available."
+out_of_scope:
+  - "No exclusions were provided by the specification."
+exploratory_charters:
+  - id: EC-PRODUCTD-001
+    mission: "Explore the highest-risk observable behavior of product-details-navigation, including state consistency and specification boundaries."
+    timebox_minutes: 15
+    focus: [SC-PRODUCTD-001]
+    note: Record observed behavior separately; inferred concerns and unknowns are not defects without evidence.
+requirements:
+  - id: RQ-PRODUCTD-001
+    statement: "Feature behavior is described by the supplied feature specification."
+    evidence: provided

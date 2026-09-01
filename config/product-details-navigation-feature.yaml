@@ -1,0 +1,26 @@
+feature:
+  id: product-details-navigation
+  name: Product details navigation
+
+  description: >
+    Validar que un usuario autenticado pueda acceder al detalle de un producto
+    desde el listado y regresar correctamente al listado de productos.
+
+  objective: >
+    Validar la navegación entre el listado de productos y el detalle de un producto,
+    comprobando que la información principal observada en ambas pantallas sea consistente.
+
+  scope:
+    include:
+      - Acceder al detalle de un producto desde el listado
+      - Validar que el nombre del producto coincida con el producto seleccionado
+      - Validar que el precio mostrado corresponda al producto seleccionado
+      - Regresar al listado de productos
+      - Validar que el listado de productos vuelva a estar disponible
+
+    exclude:
+      - Agregar productos al carrito
+      - Checkout
+      - Sorting
+      - Logout
+      - Comparación entre múltiples productos

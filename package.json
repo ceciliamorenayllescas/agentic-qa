@@ -1,0 +1,33 @@
+{
+  "name": "agentic-qa",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "qa:workflow": "tsx orchestrator/workflow.ts",
+    "qa:test-design": "tsx scripts/run-test-design.ts",
+    "qa:exploratory": "tsx scripts/run-exploratory.ts",
+    "test:all": "playwright test",
+    "test:regression": "playwright test --grep @regression",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:sanity": "playwright test --grep @sanity"
+    ,"test:unit": "tsx --test agents/automation/*.test.ts"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}

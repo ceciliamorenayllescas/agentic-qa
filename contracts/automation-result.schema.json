@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "automation-result.schema.json",
+  "title": "Automation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feature",
+    "test_cases",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "feature": {
+      "type": "string",
+      "minLength": 1
+    },
+    "automation_mode": { "type": "string", "enum": ["hybrid", "deterministic", "codex"] },
+    "codex_invoked": { "type": "boolean" },
+    "codex_reason": { "type": "string" },
+    "random_seed": { "type": "string" },
+    "classification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["functional_area", "related_areas", "suites", "tags"],
+      "properties": {
+        "functional_area": { "type": "string", "minLength": 1 },
+        "related_areas": { "type": "array", "items": { "type": "string" } },
+        "suites": { "type": "array", "items": { "type": "string" } },
+        "tags": { "type": "array", "items": { "type": "string", "pattern": "^@" } }
+      }
+    },
+    "test_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "test_case_id",
+          "automation_status",
+          "test_file"
+        ],
+        "properties": {
+          "test_case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "automation_status": {
+            "type": "string",
+            "enum": [
+              "automated",
+              "not_automated"
+            ]
+          },
+          "test_file": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "unsupported_step": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unsupported_operation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "generation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["mode"],
+            "properties": {
+              "mode": { "type": "string", "enum": ["deterministic", "codex_fallback", "codex"] }
+            }
+          },
+          "fallback": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["invoked", "reason_code", "resolved"],
+            "properties": {
+              "invoked": { "type": "boolean" },
+              "reason_code": { "type": "string", "minLength": 1 },
+              "unsupported_step": { "type": "integer", "minimum": 0 },
+              "unsupported_operation": { "type": "string", "minLength": 1 },
+              "resolved": { "type": "boolean" }
+            }
+          },
+          "plan": {
+            "type": "object",
+            "description": "Validated Automation Plan used as the sole input to spec rendering."
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "automated",
+        "not_automated"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "automated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "not_automated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "automation_coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

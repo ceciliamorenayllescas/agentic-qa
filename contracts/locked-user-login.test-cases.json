@@ -1,0 +1,69 @@
+{
+  "feature": "locked-user-login",
+  "test_cases": [
+    {
+      "id": "TC-LOCKEDUS-001",
+      "title": "Reject a blocked user with valid credentials",
+      "type": "positive",
+      "priority": "high",
+      "preconditions": [
+        "The application is available at the configured test base URL.",
+        "The visible login screen is available.",
+        "A blocked username and its corresponding valid password are available through the permitted test-data setup; their values are not supplied by the feature artifacts."
+      ],
+      "traceability": [
+        "RQ-LOCKEDUS-001",
+        "RQ-LOCKEDUS-002",
+        "RQ-LOCKEDUS-003",
+        "RQ-LOCKEDUS-004",
+        "RQ-LOCKEDUS-005",
+        "RQ-LOCKEDUS-006",
+        "RQ-LOCKEDUS-007",
+        "RQ-LOCKEDUS-008",
+        "SC-LOCKEDUS-001",
+        "RSK-LOCKEDUS-001",
+        "RSK-LOCKEDUS-002",
+        "EC-LOCKEDUS-001"
+      ],
+      "test_data_requirements": [
+        "Use a valid blocked username and its corresponding valid password supplied by the test environment at runtime.",
+        "Do not hardcode or infer credential values from the supplied artifacts."
+      ],
+      "steps": [
+        {
+          "action": "Open the application login screen.",
+          "expected_result": "The login form is visible and ready for credential entry."
+        },
+        {
+          "action": "Enter the available valid blocked username in the username field.",
+          "expected_result": "The username value is accepted in the username field."
+        },
+        {
+          "action": "Enter the corresponding valid password in the password field.",
+          "expected_result": "The password is entered in the password field without exposing its value in evidence."
+        },
+        {
+          "action": "Submit the login form.",
+          "expected_result": "The login attempt is processed and the user is not taken to the inventory."
+        },
+        {
+          "action": "Inspect the resulting page and visible feedback.",
+          "expected_result": "The application remains on the login screen, a visible error message is displayed, and the message indicates that the user is blocked."
+        }
+      ],
+      "expected_results": [
+        "A valid blocked user is refused access to the inventory.",
+        "The application remains on the login screen after submission.",
+        "A visible error message indicates that the user is blocked."
+      ]
+    }
+  ],
+  "test_design_metadata": {
+    "mode": "codex_cli",
+    "client": "codex_cli",
+    "api_calls": 0,
+    "api_cost_usd": 0,
+    "model": "not asserted by workflow",
+    "tokens": "not asserted by workflow"
+  }
+}

@@ -1,0 +1,35 @@
+feature:
+  id: cart-management
+  name: Cart management
+
+  description: >
+    Validar que un usuario autenticado pueda agregar varios productos al carrito,
+    eliminar uno de ellos y que el estado del carrito se actualice correctamente.
+
+  objective: >
+    Comprobar que el carrito refleje correctamente las operaciones de agregado y
+    eliminación de productos, manteniendo los productos restantes y actualizando
+    el indicador de cantidad.
+
+  scope:
+    include:
+      - Obtener los productos disponibles en el inventario
+      - Seleccionar aleatoriamente tres productos diferentes
+      - Agregar los tres productos seleccionados al carrito
+      - Validar que el indicador del carrito muestre tres productos
+      - Abrir el carrito
+      - Validar que los tres productos seleccionados estén presentes
+      - Seleccionar uno de los productos previamente agregados
+      - Eliminar ese producto del carrito
+      - Validar que el producto eliminado ya no esté presente
+      - Validar que los otros dos productos permanezcan en el carrito
+      - Validar que el indicador del carrito se actualice a dos productos
+
+    exclude:
+      - Checkout
+      - Product details
+      - Ordenamiento de productos
+      - Modificar cantidades
+      - Vaciar completamente el carrito
+      - Persistencia del carrito entre sesiones
+      - Logout

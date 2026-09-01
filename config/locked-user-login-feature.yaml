@@ -1,0 +1,34 @@
+feature:
+  id: locked-user-login
+  name: Locked user login
+
+  description: >
+    Validar que un usuario bloqueado no pueda acceder al inventario y que la
+    aplicación muestre un mensaje de error visible y adecuado.
+
+  objective: >
+    Comprobar que el sistema rechace correctamente el inicio de sesión de un
+    usuario bloqueado, permanezca en la pantalla de login y muestre el mensaje
+    de error correspondiente.
+
+  scope:
+    include:
+      - Abrir la pantalla de login
+      - Completar el username con un usuario bloqueado válido
+      - Completar la contraseña válida correspondiente
+      - Intentar iniciar sesión
+      - Validar que el usuario no acceda al inventario
+      - Validar que la aplicación permanezca en la pantalla de login
+      - Validar que se muestre un mensaje de error visible
+      - Validar que el mensaje indique que el usuario está bloqueado
+
+    exclude:
+      - Login exitoso
+      - Credenciales vacías
+      - Username inexistente
+      - Contraseña incorrecta
+      - Logout
+      - Recuperación de contraseña
+      - Cart
+      - Checkout
+      - Product details
