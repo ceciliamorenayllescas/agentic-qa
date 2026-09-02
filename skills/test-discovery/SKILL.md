@@ -27,7 +27,7 @@ The skill must produce structured information containing:
 * Assumptions
 * Unknowns
 
-The output should be compatible with the project's structured contracts.
+The output should be recorded by `playwright-test-planner` in the Markdown plan under `specs/`.
 
 ## Discovery Process
 
@@ -151,4 +151,3 @@ Do not:
 * Treat assumptions as requirements
 
 The output of this skill is an input to Test Design and Exploratory Testing.
-

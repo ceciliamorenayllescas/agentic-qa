@@ -1,0 +1,52 @@
+feature:
+  id: cart-general
+  name: Cart
+
+  description: >
+    Explorar y validar integralmente la funcionalidad del carrito de compras.
+
+  objective: >
+    Identificar los principales escenarios positivos, negativos, de validación
+    y de límite relacionados con el carrito de compras, diseñar los casos
+    relevantes y automatizar aquellos adecuados para una suite de regresión.
+  
+  preconditions:
+    Encontrarse previamente autenticado con credenciales válidas.
+
+  scope:
+    include:
+      - Acceso al carrito
+      - Añadir uno o varios productos al carrito desde el listado de productos
+      - Eliminar productos del carrito
+      - Validar el estado del carrito vacío
+      - Validar el estado del carrito con productos
+      - Consistencia de los productos agregados
+      - Consistencia de los precios de los productos agregados
+      - Consistencia del indicador de cantidad del carrito
+      - Comportamiento al agregar diferentes cantidades de productos
+      - Comportamiento al eliminar uno o varios productos
+      - Navegación entre el carrito y el listado de productos
+
+    exclude:
+      - Login
+      - Logout
+      - Checkout
+      - Product details
+      - Agregar productos desde Product Detail Page
+      - Persistencia del carrito entre sesiones
+
+  exploration:
+    coverage:
+      - positive
+      - negative
+      - boundary
+      - validation
+      - error-handling
+
+  automation:
+    functional_area: cart
+    suites:
+      - regression
+
+    evaluate_for:
+      - smoke

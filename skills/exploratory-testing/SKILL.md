@@ -24,10 +24,11 @@ Produce:
 * Findings
 * Evidence
 * Uncovered questions
+* Selector inventory for automation
+* POM design and reuse map
 
-Findings should be compatible with:
-
-`contracts/exploratory-finding.schema.json`
+Findings and the Automation Handoff should be recorded in the approved
+Markdown plan under `specs/`.
 
 ## Charter
 
@@ -112,7 +113,9 @@ Before identifying a potential defect, consider:
 * Authentication problems
 * Test/tool problems
 
-If expected behavior cannot be established, report the uncertainty.
+If expected behavior cannot be established, report the uncertainty. Before
+ending the session, record stable selectors, component boundaries, states and
+the POM/helper method that should own each interaction.
 
 ## Exploration Discipline
 
@@ -124,7 +127,8 @@ The agent should maintain awareness of:
 * Actions already performed
 * Findings already recorded
 
-Avoid repeating identical actions without a testing reason.
+Avoid repeating identical actions without a testing reason. Close the browser
+session after the handoff is saved, including a best-effort close on failure.
 
 ## Rules
 
@@ -136,4 +140,3 @@ Do not:
 * Create external tickets
 * Invent requirements
 * Execute arbitrary actions unrelated to the testing mission
-

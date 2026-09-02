@@ -1,0 +1,52 @@
+feature:
+  id: plp-general
+  name: Product Listing
+
+  description: >
+    Explorar y validar integralmente la funcionalidad del listado de productos
+    disponible para un usuario autenticado.
+
+  objective: >
+    Identificar los principales escenarios funcionales, de navegación,
+    visualización, ordenamiento y consistencia relacionados con el listado
+    de productos, diseñar los casos de prueba relevantes y automatizar
+    aquellos adecuados para una suite de regresión.
+
+  scope:
+    include:
+      - Acceso al listado de productos
+      - Visualización de los productos disponibles
+      - Consistencia de la información visible de los productos
+      - Nombre de los productos
+      - Precio de los productos
+      - Imágenes de los productos
+      - Disponibilidad de acciones sobre los productos
+      - Ordenamiento de productos
+      - Diferentes criterios de ordenamiento disponibles
+      - Consistencia del listado después de aplicar un ordenamiento
+      - Navegación dentro del listado de productos
+
+    exclude:
+      - Login
+      - Logout
+      - Cart
+      - Checkout
+      - Product details
+      - Agregar productos al carrito
+      - Persistencia entre sesiones
+
+  exploration:
+    coverage:
+      - positive
+      - negative
+      - boundary
+      - validation
+      - error-handling
+
+  automation:
+    functional_area: plp
+    suites:
+      - regression
+
+    evaluate_for:
+      - smoke

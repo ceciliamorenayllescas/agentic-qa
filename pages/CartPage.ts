@@ -1,5 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 
+export interface CartProductSnapshot { name: string; price: string; }
+
 export class CartPage {
   private readonly items: Locator;
   constructor(private readonly page: Page) { this.items = page.locator('[data-test="inventory-item"]'); }
@@ -12,7 +14,21 @@ export class CartPage {
   async getProductNames(): Promise<string[]> {
     return (await this.page.locator('[data-test="inventory-item-name"]').allTextContents()).map((value) => value.trim());
   }
-  async getProductSnapshots(): Promise<{ name: string }[]> { return (await this.getProductNames()).map((name) => ({ name })); }
+  async getProductPrices(): Promise<string[]> {
+    return (await this.page.locator('[data-test="inventory-item-price"]').allTextContents()).map((value) => value.trim());
+  }
+  async getProductSnapshots(): Promise<CartProductSnapshot[]> {
+    const items = this.items;
+    const snapshots: CartProductSnapshot[] = [];
+    for (let index = 0; index < await items.count(); index += 1) {
+      const item = items.nth(index);
+      snapshots.push({
+        name: (await item.locator('[data-test="inventory-item-name"]').innerText()).trim(),
+        price: (await item.locator('[data-test="inventory-item-price"]').innerText()).trim(),
+      });
+    }
+    return snapshots;
+  }
   async getProductQuantity(productName: string): Promise<number> {
     const item = this.items.filter({ hasText: productName }).first();
     return Number(await item.locator('[data-test="item-quantity"]').innerText());

@@ -73,33 +73,18 @@ Use only information available through permitted external interfaces, including:
 
 ## 4. Architecture
 
-The MVP uses a single primary QA Orchestrator.
+The MVP uses the Playwright Agent Loop as its primary orchestrator. The
+repository entry point is a feature file under `config/`; the conversational
+agent `.github/agents/agentic-qa-orchestrator.agent.md` coordinates the loop.
 
-Specialized QA capabilities should initially be implemented as skills rather than independent autonomous agents.
+The required path is:
 
-Conceptually:
+`config/<feature>.yaml` → `playwright-test-planner` → human approval → test
+cases in `specs/<feature>.md` → exploratory testing →
+`playwright-test-generator` → `tests/<feature>/` → Playwright execution →
+`playwright-test-healer` when needed.
 
-QA Orchestrator
-
-→ Test Discovery Skill
-
-→ Test Design Skill
-
-→ Exploratory Testing Skill
-
-→ Playwright Skill / Playwright MCP
-
-→ Test Automation
-
-→ Test Execution
-
-→ Result Analysis
-
-→ QA Report
-
-Do not introduce additional autonomous agents unless there is a demonstrated architectural need.
-
-Avoid unnecessary complexity.
+Do not add a second local orchestration engine or duplicate agent implementations.
 
 ---
 
@@ -187,9 +172,9 @@ Examples include:
 
 Avoid relying exclusively on free-form text when information will be consumed by another stage of the workflow.
 
-Contracts belong under:
-
-`contracts/`
+The approved Markdown plan under `specs/` is the human-readable contract for
+test scenarios and cases. Generated Playwright tests under `tests/` are the
+executable contract. Do not create parallel JSON/YAML test-case contracts.
 
 ---
 
@@ -313,17 +298,18 @@ When executing a QA workflow:
 
 1. Understand the requested feature.
 2. Identify assumptions and missing information.
-3. Load relevant product knowledge.
-4. Identify risks and test areas.
-5. Generate structured test scenarios/cases.
-6. Explore the application when appropriate.
-7. Collect evidence.
-8. Select meaningful scenarios for automation.
-9. Generate Playwright tests.
-10. Execute the tests.
-11. Analyze failures.
-12. Distinguish test failures from potential application defects.
-13. Produce a QA report.
+3. Load relevant product knowledge and skills.
+4. Activate `playwright-test-planner` and produce the feature plan.
+5. Pause for exact human approval: `approved` or `not approved`.
+6. Create happy-path, negative and boundary test cases in the approved plan.
+7. During exploration, record a selector inventory, POM/helper reuse map and
+   related existing specs in an Automation Handoff section of the plan.
+8. Close the browser after exploration, including a best-effort close on error.
+9. Activate `playwright-test-generator` using that handoff; do not rediscover
+   selectors with MCP. Extend related POMs/specs instead of duplicating them.
+10. Execute the Playwright suite.
+11. Activate `playwright-test-healer` on failures.
+12. Analyze failures and produce the QA report.
 
 Do not skip directly to automation when exploratory investigation would provide useful information.
 
@@ -379,33 +365,15 @@ Do not implement future roadmap features prematurely.
 
 The current priority is the MVP.
 
-## 19. Codex Test Design
+## 19. Playwright Agent Loop
 
-The default Test Design mode is `codex_cli`. The local Node workflow never calls
-an OpenAI API, never reads `OPENAI_API_KEY`, never handles OAuth tokens, and does
-not use the `openai` package. It invokes the locally authenticated Codex CLI
-through `codex exec` for one non-interactive Test Design task.
+Codex is the primary AI interface. Read `CODEX_ORCHESTRATOR.md` and use the
+Codex agent definitions under `.codex/agents/`:
 
-The workflow runs Discovery and Exploratory, then writes a compact request to
-`artifacts/test-design/<feature>.request.json`. In `codex_cli`, the worker reads
-that request and produces only `contracts/<feature>.test-cases.json`; the
-workflow then performs deterministic schema/quality validation and continues
-without pausing. Codex output is recorded in the compact
-`artifacts/test-design/<feature>.codex.log` log. The worker does not generate
-Automation, Playwright code, or selectors, does not run the full workflow, and
-must not modify framework source, feature YAML, tests, or package files.
+* `playwright_test_planner`
+* `playwright_test_generator`
+* `playwright_test_healer`
 
-The worker may read the request, its referenced Feature/Discovery/Exploratory
-artifacts, `contracts/test-cases.schema.json`, and this file. Its only intended
-write is the Test Design contract. The CLI uses a conservative workspace-write
-sandbox because that output is inside the repository; the prompt explicitly
-restricts the task to that artifact and the workflow validates the result
-before marking `test_design` completed. `CODEX_TEST_DESIGN_TIMEOUT_MS` controls
-the child-process timeout. Missing CLI, authentication, rate-limit, timeout,
-non-zero exit, missing output, and validation errors fail Test Design; there is
-no silent fallback.
-
-`TEST_DESIGN_MODE=codex_checkpoint` remains the manual debugging/fallback mode:
-the request is created and the workflow becomes `paused` until the artifact is
-provided and resumed with `--resume <workflow-state>`. `TEST_DESIGN_MODE=deterministic`
-is available only for explicit development or regression runs.
+The planner must pause for human approval before the generator writes tests.
+The approved Markdown plan is the only test-plan/test-case contract. Do not
+invoke a second local test-design or automation pipeline.

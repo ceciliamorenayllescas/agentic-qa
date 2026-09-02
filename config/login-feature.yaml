@@ -1,0 +1,46 @@
+feature:
+  id: login-general
+  name: Login
+
+  description: >
+    Explorar y validar integralmente la funcionalidad de autenticación de usuarios.
+
+  objective: >
+    Identificar los principales escenarios positivos, negativos, de validación y de
+    límite relacionados con el inicio de sesión, diseñar los casos relevantes y
+    automatizar aquellos adecuados para una suite de regresión.
+
+  scope:
+    include:
+      - Acceso mediante username y password
+      - Login exitoso
+      - Login rechazado
+      - Validaciones visibles del formulario
+      - Manejo de usuarios bloqueados
+      - Manejo de credenciales incorrectas
+      - Campos obligatorios
+      - Mensajes de error
+      - Comportamiento posterior a un login exitoso
+    exclude:
+      - Logout
+      - Recuperación de contraseña
+      - Registro de usuarios
+      - Cart
+      - Checkout
+      - Product details
+
+  exploration:
+    coverage:
+      - positive
+      - negative
+      - boundary
+      - validation
+      - error-handling
+
+  automation:
+    functional_area: login
+    suites:
+      - regression
+    evaluate_for:
+      - smoke
+

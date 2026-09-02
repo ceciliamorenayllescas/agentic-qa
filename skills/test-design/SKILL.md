@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Transform discovered test scenarios into structured, reproducible test cases.
+Transform discovered test scenarios into structured, reproducible test cases inside the approved Playwright Markdown plan.
 
 ## Inputs
 
@@ -16,14 +16,12 @@ Transform discovered test scenarios into structured, reproducible test cases.
 
 Produce test cases compatible with:
 
-`contracts/test-case.schema.json`
+the approved `specs/<feature>.md` plan consumed by `playwright-test-generator`.
 
-Each test case must contain:
+Each scenario must contain:
 
-* ID
-* Title
-* Type
-* Priority
+* Clear title
+* Type and priority when relevant
 * Preconditions
 * Steps
 * Expected results
@@ -77,6 +75,7 @@ Feature
 Do not:
 
 * Generate Playwright code
+* Create a parallel JSON contract
 * Execute tests
 * Invent expected behavior
 * Assume undocumented business rules
@@ -93,4 +92,3 @@ A good test case should be:
 * Independent
 * Risk-relevant
 * Automation-friendly when appropriate
-
