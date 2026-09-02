@@ -1,146 +1,194 @@
-# Test Plan — Checkout with error user
+# Plan de pruebas: Checkout general con `error_user`
 
-## Traceability
+## Identificación y alcance
 
-- Feature: `checkout-general` (`config/checkout-error-user.yaml`)
-- SUT: SauceDemo, `TEST_BASE_URL`
-- Approach: black-box; authenticated as `error_user` using environment credentials
-- Automation: `checkout`, regression; evaluate for smoke
-- Status: ready for human approval
+- **Feature:** `checkout-general` desde `config/checkout-error-user.yaml`.
+- **SUT:** SauceDemo, `https://www.saucedemo.com/`; pruebas web externas black-box.
+- **Objetivo:** validar checkout con `error_user` y, cuando el entorno lo permita, `problem_user`.
+- **Cobertura:** carrito vacío, un producto y múltiples productos; consistencia de nombres, precios y cantidades; datos personales; cálculo; navegación, errores y móvil.
+- **Excluido:** login/logout como funcionalidad, detalles de producto y persistencia entre sesiones. El login solo es precondición técnica.
+- **Estado:** listo para aprobación humana; no se generó ni ejecutó Cypress.
 
-## Scope and risks
+## Supuestos, datos y riesgos
 
-Cover checkout from cart through completion, one or multiple products, product/price/quantity consistency, required personal data, empty cart, boundary values, error handling, recovery and mobile web. Login, logout, product details and cross-session cart persistence are excluded.
+1. Cada escenario comienza en estado fresco e independiente: sesión nueva, carrito vacío y formulario limpio.
+2. La URL se obtiene de `TEST_BASE_URL` y las credenciales de variables de entorno; no se guardan secretos en este plan.
+3. No hay reglas de negocio formales en `knowledge/`; distinguir comportamiento observado, expectativa explícita, supuesto e incertidumbre.
+4. Si el usuario de error no alcanza una etapa, registrar el bloqueo y evidencia; no clasificarlo automáticamente como defecto.
+5. Riesgos prioritarios: navegación de carrito/checkout no disponible; pérdida, duplicación o sustitución de productos; cantidades/precios/totales incorrectos; confirmación sin datos o productos; validación silenciosa; recuperación y usabilidad móvil.
 
-Highest risks: checkout navigation unavailable for the target role (Critical); incorrect or lost cart data (High); order confirmation without required data or products (High); validation and recovery gaps (High); mobile usability (Medium).
+## Charter exploratorio
 
-No formal business rules are provided. Expected outcomes below are based on the feature objective and observable user-facing consistency; uncertain behavior must remain explicitly marked.
+**Misión:** determinar si `error_user` puede recorrer y recuperar el checkout conservando estado, productos, precios, cantidades y validaciones.
 
-## Exploratory charter
+**Duración:** 45–60 minutos por entorno. **Heurísticas:** consistencia de estado, usuario de error, límites, repetición, reload/back/forward, feedback visible, URL, foco, cálculos y comparación de roles. **Oráculo:** solo interfaz, accesibilidad, URL, mensajes, consola y comparación observable; no inventar reglas.
 
-**Mission:** investigate whether `error_user` can complete and recover from checkout while preserving cart state, product data and validation rules.
+## Flujos principales
 
-**Heuristics:** state consistency, empty and boundary values, repeated actions, navigation/reload recovery, visible validation and responsive usability.
+1. Autenticar → seleccionar productos → carrito → información → resumen → finalización.
+2. Enviar formulario vacío/parcial → observar bloqueo, mensaje, foco y conservación → corregir.
+3. Quitar todos los productos → inspeccionar contador y Checkout → impedir confirmación inválida.
+4. Cancelar, volver, avanzar y recargar en cada etapa alcanzable → comprobar recuperación.
+5. Repetir el camino mínimo con `problem_user` y comparar diferencias observables.
 
-## Exploration observations and findings
+## Escenarios independientes
 
-1. `error_user` authenticated successfully and reached `/inventory.html`.
-2. The initial observable state showed cart badge `2`, with Backpack and Bike Light selected.
-3. Clicking visible `Remove` buttons did not change the badge or button state. Clicking `Add to cart` for Bolt T-Shirt also did not change the badge.
-4. Clicking the visible cart link did not navigate away from `/inventory.html`.
-5. These are reproducible observations and a **potential defect / needs investigation** for this role. The available knowledge does not define whether `error_user` is intentionally restricted, so this is not a confirmed product defect.
+### TC-01 — Completar checkout con un único producto
 
-**Evidence:** `artifacts/checkout-error-user-inventory.png`; MCP snapshots/logs under `.playwright-mcp/`. URL remained `https://www.saucedemo.com/inventory.html` after the cart-link action.
+**Tipo/Prioridad:** positivo, regresión/humo, crítica. **Inicio:** sesión fresca autenticada; carrito vacío.
 
-## Test cases
+1. Agregar exactamente un producto y verificar contador `1`.
+2. Abrir carrito; verificar nombre, precio y cantidad `1`.
+3. Seleccionar `Checkout`; completar `First Name`, `Last Name` y `Zip/Postal Code` válidos.
+4. Seleccionar `Continue`; comparar el resumen con el carrito.
+5. Verificar subtotal/total visibles y coherencia con el precio; seleccionar `Finish`.
 
-### TC-01 — Complete checkout with one product
+**Esperado:** transiciones correctas, datos conservados y confirmación visible. **Falla:** bloqueo inexplicado, datos alterados, cálculo incoherente o confirmación ausente/indebida.
 
-**Type/Priority:** positive, regression / Critical
+### TC-02 — Checkout con múltiples productos y cantidades
 
-**Preconditions:** authenticated as `error_user`; cart can be cleaned through UI.
+**Tipo/Prioridad:** positivo/consistencia, alta. **Inicio:** sesión fresca y carrito vacío.
 
-1. Add one product and open the cart.
-2. Verify the product name, price and quantity `1`.
-3. Select Checkout.
-4. Enter valid first name, last name and postal code; select Continue.
-5. Verify the summary and select Finish.
+1. Agregar al menos tres productos distintos y registrar nombre/precio.
+2. Comparar entradas del inventario con el carrito y cantidad inicial `1`.
+3. Repetir agregar un producto si la UI lo permite; observar si cambia cantidad o contador.
+4. Completar datos válidos y avanzar al resumen.
+5. Comparar conjunto, precios y cantidades entre inventario, carrito y resumen; comprobar subtotal = suma precio × cantidad y coherencia del total.
 
-**Expected:** each transition is available, product data remains consistent, total is coherent with the observed price, and completion is visibly confirmed. If the role cannot reach a step, record the exact observable block and classify against the exploration finding.
+**Esperado:** sin omisiones, duplicados, sustituciones ni cálculos incoherentes.
 
-### TC-02 — Preserve multiple products and prices
+### TC-03 — Formulario completamente vacío
 
-**Type/Priority:** positive/validation / High
+**Tipo/Prioridad:** negativo/validación, alta. **Inicio:** un producto y checkout de información visible.
 
-**Preconditions:** authenticated; cart can be cleaned through UI.
+1. Dejar vacíos los tres campos y seleccionar `Continue`.
+2. Registrar mensaje visible, foco, estado de campos, URL, carrito y consola.
 
-1. Add at least three distinct products.
-2. Compare names/prices between inventory and cart.
-3. Complete checkout with valid data.
-4. Compare the summary items, quantities, subtotal and total with the cart.
+**Esperado:** avance bloqueado, mensaje claro del campo obligatorio y carrito conservado. **Falla:** llega a resumen/confirmación, no hay feedback utilizable o se pierde el estado.
 
-**Expected:** no missing, duplicated or substituted items; quantities and calculated values remain coherent.
+### TC-04 — Cada campo requerido vacío
 
-### TC-03 — Required fields empty or partially empty
+**Tipo/Prioridad:** negativo/validación, alta. **Inicio:** repetir desde estado fresco por iteración.
 
-**Type/Priority:** negative/validation / High
+1. Dejar vacío únicamente `First Name`; completar los otros dos y continuar.
+2. Repetir dejando vacío únicamente `Last Name` y luego únicamente `Zip/Postal Code`.
+3. Registrar texto exacto, foco, valores retenidos y URL en cada iteración.
 
-1. Reach checkout information with one product.
-2. Continue with all fields empty, then repeat with each required field empty individually.
-3. Observe URL, visible error, focus and retained values.
+**Esperado:** cada campo vacío bloquea el avance y es identificado correctamente; valores válidos permanecen.
 
-**Expected:** progression is blocked with a clear visible validation message; cart state is not lost and summary is not reached.
+### TC-05 — Nulos, espacios y caracteres especiales
 
-### TC-04 — Null, whitespace, special and boundary values
+**Tipo/Prioridad:** negativo/borde/validación, media. **Inicio:** formulario fresco con un producto.
 
-**Type/Priority:** negative/boundary/validation / Medium
+1. Probar vacío real, `null` representado por ausencia de valor, espacios solos y espacios al inicio/final.
+2. Probar nombres con guion, apóstrofe, Unicode y caracteres no alfabéticos razonables.
+3. Probar código postal alfanumérico, de un carácter, largo y con espacios.
+4. Observar aceptación, rechazo, normalización y mensajes, sin asumir reglas no documentadas.
 
-1. Try whitespace-only names and postal code.
-2. Try names containing hyphen, apostrophe and Unicode characters.
-3. Try alphanumeric, very short and very long postal codes.
-4. Record accepted/rejected values and messages.
+**Esperado:** comportamiento estable y feedback explícito cuando corresponda; registrar incertidumbres como observaciones.
 
-**Expected:** behavior is consistent and observable. Undocumented input rules are recorded as observations/uncertainties, not assumed defects.
+### TC-06 — Límites de longitud y entradas extensas
 
-### TC-05 — Empty cart and repeated actions
+**Tipo/Prioridad:** borde/error handling, media. **Inicio:** formulario fresco.
 
-**Type/Priority:** negative/error_handling / High
+1. Introducir un carácter, una longitud mínima aparente y una cadena mucho mayor de lo normal en cada campo.
+2. Continuar y observar límite, truncado, rechazo o aceptación.
+3. Recargar sin finalizar y comprobar layout, URL y carrito.
 
-1. Remove all products using UI controls.
-2. Open the empty cart and inspect Checkout availability.
-3. If available, attempt checkout and continue through the flow only as allowed.
-4. Repeat cart and product actions once to detect duplicate or stale state.
+**Esperado:** no hay crash, desbordamiento, corrupción ni truncado silencioso; si existe límite, el usuario recibe feedback.
 
-**Expected:** an order cannot be confirmed without products, or the application presents a coherent blocked state; no stale badge or unintended item is introduced.
+### TC-07 — Carrito vacío y acciones repetidas
 
-### TC-06 — Navigation/reload recovery and mobile checkout
+**Tipo/Prioridad:** negativo/estado, alta. **Inicio:** sesión fresca y carrito vacío.
 
-**Type/Priority:** error_handling/regression / Medium
+1. Observar contador, lista y disponibilidad de `Checkout` sin agregar productos.
+2. En una variante, agregar y quitar un producto; repetir una vez cada acción.
+3. Abrir carrito vacío y, si Checkout está habilitado, intentar avanzar sin finalizar.
 
-1. From each reachable checkout step, use Cancel, browser back/forward and reload.
-2. Verify URL, cart, form and summary state after each action.
-3. Repeat the reachable flow at a 390×844 mobile viewport.
+**Esperado:** contador/lista/botones coinciden; no se confirma una orden vacía ni aparecen productos fantasma.
 
-**Expected:** no accidental confirmation, no lost or duplicated state, and reachable controls/messages remain usable without horizontal overflow.
+### TC-08 — Cancelar, navegación y recarga
+
+**Tipo/Prioridad:** recuperación/regresión, media-alta. **Inicio:** repetir desde cada etapa alcanzable.
+
+1. Usar `Continue Shopping` desde carrito y `Cancel` desde información.
+2. Usar back/forward y reload en carrito, información y resumen.
+3. Después de cada acción comparar URL, contador, productos, formulario, resumen y ausencia de confirmación accidental.
+
+**Esperado:** recuperación coherente, sin pérdida ni duplicación inesperada; persistencia tras reload se documenta como observada, no como regla.
+
+### TC-09 — Diferencia observable entre usuarios de error
+
+**Tipo/Prioridad:** rol/error handling, alta. **Inicio:** estado fresco por usuario.
+
+1. Ejecutar el camino mínimo con `error_user` y `problem_user` usando credenciales del entorno.
+2. Registrar llegada a Products, contador inicial, controles habilitados, URLs y mensajes.
+3. Repetir una vez cada diferencia y clasificarla como intencional, ambiental o potencial defecto.
+
+**Esperado:** diferencias consistentes y reproducibles, sin atribución no sustentada.
+
+### TC-10 — Checkout en viewport móvil
+
+**Tipo/Prioridad:** responsive/regresión, media. **Inicio:** sesión fresca, viewport aproximado `390x844`.
+
+1. Repetir el camino mínimo alcanzable.
+2. Verificar controles, campos, errores, resumen y confirmación.
+3. Comprobar ausencia de scroll horizontal, solapamiento y texto esencial cortado.
+
+**Esperado:** controles y feedback utilizables en todas las etapas alcanzables.
+
+## Hallazgos y evidencia
+
+### H-01 — Controles de carrito no responden con `error_user`
+
+**Clasificación:** hallazgo reproducible; potencial defecto o comportamiento especial, no confirmado por ausencia de regla formal. En una sesión que alcanzó `/inventory.html`, el badge mostró `2` y el carrito contenía `Sauce Labs Backpack` y `Sauce Labs Bike Light`. `Remove`, `Add to cart`, el enlace del carrito y `Checkout` no cambiaron el estado o URL observables. **Impacto:** bloquea el camino crítico y puede producir UI incoherente. **Reproducción:** autenticar con credenciales de entorno, observar `/inventory.html`, activar esos controles y comparar URL, badge, botones y snapshot. **Evidencia:** snapshots Playwright del 2026-09-02 bajo `.playwright-mcp/page-*.yml`; la URL permaneció `https://www.saucedemo.com/inventory.html` tras abrir carrito.
+
+### H-02 — 404 observable en rutas directas
+
+**Clasificación:** observación de entorno/comportamiento, requiere confirmación. Navegar directamente a `/cart.html` y `/checkout-step-one.html` mostró UI, pero la consola reportó `Failed to load resource: the server responded with a status of 404 ()` para ambas rutas; el botón Checkout no navegó. **Evidencia:** mensajes de consola y snapshots Playwright de la sesión.
+
+### H-03 — Envío vacío sin mensaje accesible observado
+
+**Clasificación:** observación de validación, no confirmada. Tras `Continue` con los tres campos vacíos en `/checkout-step-one.html`, la URL no cambió y el snapshot no coincidió con `error`, `required` o `Error`. Repetir con usuario base antes de elevar defecto; puede ser limitación del rol o sesión.
+
+## Criterios de salida
+
+Cada escenario debe ejecutarse o quedar bloqueado con causa y evidencia; los bloqueos de rol deben separarse de defectos; no debe haber credenciales en artefactos; y los casos estables deben quedar trazables a regresión/humo. Antes de generar automatización se requiere la respuesta exacta `approved` o `aprobado` según el orquestador.
 
 ## Automation Handoff
 
 ### Selector inventory
 
-- Login precondition: `[data-test="username"]`, `[data-test="password"]`, `[data-test="login-button"]`.
-- Inventory/cart: `[data-test="inventory-item"]`, `[data-test="inventory-item-name"]`, `[data-test="inventory-item-price"]`, buttons whose accessible name is `Add to cart` or `Remove`, `[data-test="shopping-cart-link"]`, `[data-test="shopping-cart-badge"]`, `[data-test="checkout"]`.
-- Checkout: `[placeholder="First Name"]`, `[placeholder="Last Name"]`, `[placeholder="Zip/Postal Code"]`, `[data-test="continue"]`, `[data-test="cancel"]`, `[data-test="finish"]`, `[data-test="error"]`, `[data-test="complete-header"]`, `[data-test="inventory-item"]`, `[data-test="subtotal-label"]`, `[data-test="total-label"]`.
+- Precondition login: `[data-test="username"]`, `[data-test="password"]`, `[data-test="login-button"]`.
+- Inventory/cart: `[data-test="inventory-item"]`, `[data-test="inventory-item-name"]`, `[data-test="inventory-item-price"]`, `[data-test="item-quantity"]`, `[data-test="shopping-cart-link"]`, `[data-test="shopping-cart-badge"]`, `[data-test="checkout"]`; prefer accessible `Add to cart` and `Remove` buttons.
+- Checkout information: `[placeholder="First Name"]`, `[placeholder="Last Name"]`, `[placeholder="Zip/Postal Code"]`, `[data-test="continue"]`, `[data-test="cancel"]`, `[data-test="error"]`.
+- Summary/completion: `[data-test="inventory-item"]`, `[data-test="inventory-item-name"]`, `[data-test="inventory-item-price"]`, `[data-test="item-quantity"]`, `[data-test="subtotal-label"]`, `[data-test="total-label"]`, `[data-test="finish"]`, `[data-test="complete-header"]`.
 - URLs: `/inventory.html`, `/cart.html`, `/checkout-step-one.html`, `/checkout-step-two.html`, `/checkout-complete.html`.
+- Literal UI text: `Products`, `Your Cart`, `Checkout`, `Checkout: Your Information`, `First Name`, `Last Name`, `Zip/Postal Code`, `Continue`, `Cancel`, `Finish`, `Continue Shopping`.
 
 ### POM/helper reuse map
 
-- Reuse and extend `cypress/support/authentication.js` for role-based environment credentials; it exposes standard-user and error-user login helpers.
-- Reuse/extend `cypress/pages/InventoryPage.js`, `cypress/pages/CartPage.js` and `cypress/pages/CheckoutPage.js`; keep raw locators there. `cypress/pages/LoginPage.js` owns login mechanics.
-- Reuse `cypress/support/data.js`; add only approved boundary data.
-- General checkout spec: `cypress/e2e/checkout/checkout.cy.js`. Role-specific additions: `cypress/e2e/checkout/checkout-error-user.cy.js`. Extend these specs when cases match; create a new functional spec when the functionality is not covered.
-- Cypress shared setup belongs in `cypress/support/commands.js` and `cypress/support/e2e.js`; fixtures belong in `cypress/fixtures/`.
+- Reuse `cypress/support/authentication.js` for environment-provided `error_user` credentials; never hardcode secrets.
+- Reuse and extend `cypress/pages/InventoryPage.js`, `cypress/pages/CartPage.js`, and `cypress/pages/CheckoutPage.js`; keep raw locators in page objects.
+- Reuse `cypress/support/data.js` for valid and boundary customer data.
+- Extend `cypress/e2e/checkout/checkout-error-user.cy.js` for role-specific behavior and `cypress/e2e/checkout/checkout.cy.js` for generic coverage; do not duplicate existing cases.
+- Existing helpers cover cart entries, checkout fields, summary entries, subtotal, total, validation text, Cancel, Continue, and Finish.
+
+### Related existing specs
+
+- `specs/checkout-general.md` — this plan and the single contract after approval.
+- `specs/login-general.md` — precondition and credential-handling context only.
+- `specs/plp-general.md` — inventory/product-selection context.
+- `cypress/e2e/checkout/checkout.cy.js` — generic checkout regression.
+- `cypress/e2e/checkout/checkout-error-user.cy.js` — existing error-user cases to extend.
 
 ### Expected UI states
 
-Authenticated inventory; cart with zero/one/multiple items; checkout information with empty/partial/valid fields; summary with items and totals; completion confirmation; role-specific blocked controls are an observed state requiring investigation.
-
-## Approval gate
-
-Reply exactly `approved` or `not approved`.
-
-## Automation execution update
-
-The approved Cypress specs `cypress/e2e/checkout/checkout.cy.js` and `cypress/e2e/checkout/checkout-error-user.cy.js` were executed against the configured SauceDemo environment.
-
-- Passed: 3/5
-- Failed: 2/5
-- Skipped: 0
-- Evidence: `artifacts/cypress/screenshots/checkout.cy.js/` and `artifacts/cypress/videos/checkout.cy.js.mp4`
-
-### Result analysis
-
-- TC-01: **APPLICATION_DEFECT or role-specific behavior, medium confidence.** The test reached `/checkout-step-one.html`, then the application raised `TypeError: Cannot read properties of undefined (reading 'value')` while typing the last name. The test setup and selectors reached the intended visible fields; no test change can safely preserve the intended checkout assertion while avoiding the application exception.
-- TC-02: **APPLICATION_DEFECT or role-specific behavior, medium confidence.** The application raised `Failed to add item to the cart` while adding the third visible product. This matches the exploratory observation that cart actions for `error_user` were not reflected in the UI.
-- TC-03, TC-05 and TC-06: PASS.
-
-The failures are not classified as confirmed product defects because no formal rule states that `error_user` must support a complete successful checkout. They are reproducible potential defects/needs for product clarification.
+- Fresh login page before setup; authenticated Products page after successful setup.
+- Empty cart with no stale badge; single-item and multi-item carts with consistent quantities/prices.
+- Checkout information with empty, partial, valid, whitespace, special-character, and boundary data.
+- Summary with the same item set, quantities, prices, subtotal, and total as the cart.
+- Completion page with visible confirmation after valid checkout.
+- Blocked transition with visible validation feedback for missing data.
+- Non-responsive or blocked controls are expected only as observed error-user states and must be asserted with URL/state evidence, not assumed universal.
+- Mobile approximately `390x844` with usable controls and no horizontal overflow.

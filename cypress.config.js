@@ -1,5 +1,6 @@
 require('dotenv/config');
 const { defineConfig } = require('cypress');
+const { createFailureReports } = require('./cypress/reporters/test-report-generator');
 
 module.exports = defineConfig({
   env: {
@@ -26,5 +27,13 @@ module.exports = defineConfig({
     videosFolder: 'artifacts/cypress/videos',
     downloadsFolder: 'artifacts/cypress/downloads',
     retries: process.env.CI ? 2 : 0,
+    setupNodeEvents(on, config) {
+      on('after:spec', (spec, results) => {
+        if (results && results.tests) {
+          createFailureReports(results, config.projectRoot);
+        }
+      });
+      return config;
+    },
   },
 });

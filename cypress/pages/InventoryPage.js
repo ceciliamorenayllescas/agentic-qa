@@ -14,6 +14,8 @@ class InventoryPage {
   addFirstProductToCart() { this.addProductToCart(0); }
   addProductToCart(index) { cy.get('[data-test="inventory-item"]').eq(index).contains('button', 'Add to cart').click(); }
   openCart() { cy.get('[data-test="shopping-cart-link"]').click(); }
+  removeProductByName(name) { cy.get('[data-test="inventory-item"]').contains(name).closest('[data-test="inventory-item"]').contains('button', 'Remove').click(); }
+  getCartBadge() { return cy.get('body').then($body => $body.find('[data-test="shopping-cart-badge"]').text().trim()); }
   openProductDetailsByName(name) {
     cy.get('[data-test="inventory-item"]').contains(name).closest('[data-test="inventory-item"]').find('[data-test$="title-link"]').click();
   }

@@ -202,7 +202,11 @@ fallo no se clasifica automáticamente como defecto de producto.
 
 ## Evidencia y artefactos
 
-Cypress puede generar screenshots y videos en `artifacts/`.
+Cypress puede generar screenshots y videos en `artifacts/`. Cuando una ejecución
+termina con casos fallidos, el hook `after:spec` genera un reporte Markdown por
+caso en `artifacts/reports/test-reports/`, listo para completar y subir como
+ticket. Los reportes se crean con clasificación inicial `UNKNOWN`: el fallo debe
+analizarse antes de considerarlo un defecto de la aplicación.
 Estos archivos son generados y no deben contener secretos. La evidencia debe
 referenciar URL, test, pasos, resultado y contexto suficiente para reproducir
 el hallazgo.

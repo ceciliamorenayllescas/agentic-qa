@@ -14,7 +14,9 @@ Follow this path in order:
    `specs/<feature>.md`.
    The plan must include an `Automation Handoff` section with a selector
    inventory, POM/helper reuse map, related existing specs and expected UI
-   states. Close the browser after saving the handoff.
+   states. Write the entire plan in Spanish, except for the Automation
+   Handoff section, whose heading and content must remain in English. Close
+   the browser after saving the handoff.
 3. Stop and ask the human: `Test Plan ready. Reply approved or not approved.`
 4. Continue only on the exact reply `approved` or `aprobado`; revise and ask again on
    `not approved`.

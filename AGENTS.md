@@ -377,3 +377,11 @@ Codex agent definitions under `.codex/agents/`:
 The planner must pause for human approval before the generator writes tests.
 The approved Markdown plan is the only test-plan/test-case contract. Do not
 invoke a second local test-design or automation pipeline.
+
+### Test plan language
+
+All newly generated test plans under specs/ must be written in Spanish. The
+only exception is the Automation Handoff section: keep its heading and all
+of its content in English so the automation handoff remains consistent with
+the generator workflow. Technical identifiers, selectors, URLs, code and
+literal UI text may remain unchanged when necessary for accuracy.

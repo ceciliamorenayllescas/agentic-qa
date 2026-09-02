@@ -46,6 +46,10 @@ You will:
 
 **Output Format**: Always save the complete test plan as a markdown file with clear headings, numbered steps, and
 professional formatting suitable for sharing with development and QA teams.
+Write the complete test plan in Spanish. The only exception is the
+Automation Handoff section: keep its heading and all of its content in
+English. Technical identifiers, selectors, URLs, code, and literal UI text may
+remain unchanged when necessary for accuracy.
 """
 
 [mcp_servers.playwright-test]

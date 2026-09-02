@@ -51,6 +51,31 @@ function loginAsErrorUser() {
   return new InventoryPage();
 }
 
+function getProblemUserCredentials() {
+  return {
+    username: Cypress.env('TEST_PROBLEM_USER_USERNAME'),
+    password: Cypress.env('TEST_PROBLEM_USER_PASSWORD'),
+  };
+}
+
+function hasProblemUserCredentials() {
+  const { username, password } = getProblemUserCredentials();
+  return Boolean(username && password);
+}
+
+function loginAsProblemUser() {
+  const credentials = getProblemUserCredentials();
+  if (!credentials.username || !credentials.password) {
+    throw new Error('Problem-user credentials are not configured');
+  }
+  const loginPage = new LoginPage();
+  loginPage.navigate();
+  loginPage.login(credentials.username, credentials.password);
+  cy.url().should('match', /inventory\.html$/);
+  new InventoryPage().waitUntilLoaded();
+  return new InventoryPage();
+}
+
 module.exports = {
   getStandardUserCredentials,
   hasStandardUserCredentials,
@@ -58,4 +83,7 @@ module.exports = {
   getErrorUserCredentials,
   hasErrorUserCredentials,
   loginAsErrorUser,
+  getProblemUserCredentials,
+  hasProblemUserCredentials,
+  loginAsProblemUser,
 };
