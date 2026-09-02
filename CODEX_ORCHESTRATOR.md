@@ -20,16 +20,16 @@ Follow this path in order:
    `not approved`.
 5. Treat the approved Markdown plan as the test-case contract. It must cover
    happy paths, negative cases and relevant boundaries.
-6. Before generating, inspect `pages/`, `helpers/` and existing feature specs.
+6. Before generating, inspect `cypress/pages/`, `cypress/support/` and existing feature specs.
    Extend related POMs/specs instead of duplicating them. Use the selector
    inventory from the approved plan; do not rediscover selectors with MCP.
    Keep raw locators inside POMs and keep specs clean.
-7. Use `playwright_test_generator` to create tests under `tests/<feature>/`.
-8. Execute the tests with Playwright. They must run later with `npm test`
+7. Use `playwright_test_generator` to create Cypress JavaScript tests under `cypress/e2e/<feature>/`.
+8. Execute the tests with Cypress. They must run later with `npm test`
    without Codex.
 9. On a failure, immediately use `playwright_test_healer`, preserving the
-   report, trace, screenshots and the original assertion intent.
+   report, screenshots, videos and the original assertion intent.
 
 Do not revive the deleted local orchestrator, scripts, contracts or feature
 test generators. The only persistent test artifacts are the approved Markdown
-plan and the Playwright tests.
+plan and the Cypress JavaScript tests.

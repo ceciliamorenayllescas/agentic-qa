@@ -1,0 +1,47 @@
+feature:
+  id: checkout-general
+  name: Checkout with error user
+
+  description: >
+    Explorar y validar integralmente la funcionalidad de checkout del carrito de compras utilizando usuarios error user y/o problem user
+
+  objective: >
+    Identificar los principales escenarios positivos, negativos, de validación
+    y de límite relacionados con el proceso de checkout, diseñar los casos
+    relevantes y automatizar aquellos adecuados para una suite de regresión.
+  
+  preconditions:
+    Encontrarse previamente autenticado con credenciales de error user y/o problem user.
+
+  scope:
+    include:
+      - Checkout completo hasta mensaje de éxito desde carrito de compras
+      - Checkout con múltiples productos en distintas cantidades
+      - Checkout de un único producto
+      - Checkout sin productos
+      - Consistencia de los productos seleccionados
+      - Consistencia de los precios de los productos seleccionados y sus cantidades
+      - Completar el formulario de datos personales
+      - Formulario de datos personales con datos vacíos o nulos
+
+    exclude:
+      - Login
+      - Logout
+      - Product details
+      - Persistencia del carrito entre sesiones
+
+  exploration:
+    coverage:
+      - positive
+      - negative
+      - boundary
+      - validation
+      - error-handling
+
+  automation:
+    functional_area: checkout
+    suites:
+      - regression
+
+    evaluate_for:
+      - smoke

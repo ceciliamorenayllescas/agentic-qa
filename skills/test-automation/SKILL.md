@@ -2,14 +2,14 @@
 
 ## Purpose
 
-Transform approved test cases into a small, maintainable Playwright regression suite.
+Transform approved test cases into a small, maintainable Cypress JavaScript regression suite.
 
 ## Inputs
 
 - Approved plan from `specs/`
 - Approved Markdown plan under `specs/`, including its Automation Handoff
 - Exploratory selector inventory and POM map in the plan
-- Existing fixtures, page objects and Playwright configuration
+- Existing Cypress page objects, helpers and configuration
 
 ## Rules
 
@@ -25,4 +25,4 @@ Transform approved test cases into a small, maintainable Playwright regression s
 
 ## Output
 
-Produce clean Playwright tests under `tests/<feature>/`, reusing or extending existing POMs/helpers. Unsupported or uncertain cases remain documented in the plan with a reason.
+Produce clean Cypress JavaScript tests under `cypress/e2e/<feature>/`, reusing or extending existing page objects and support helpers. Unsupported or uncertain cases remain documented in the plan with a reason.

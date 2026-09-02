@@ -7,7 +7,7 @@ exploración y automatización. El primer sistema bajo prueba es SauceDemo.
 ## Objetivo
 
 El flujo parte de una definición de feature y produce un plan revisable,
-tests Playwright mantenibles y una suite ejecutable sin IA. El proceso prioriza
+tests Cypress mantenibles y una suite ejecutable sin IA. El proceso prioriza
 riesgo, casos felices, escenarios negativos, límites, validaciones, estados,
 errores, evidencia y reproducibilidad.
 
@@ -32,10 +32,10 @@ test cases dentro del plan aprobado
 exploración + Automation Handoff
         |
         v
-playwright_test_generator -- crea o extiende tests/<feature>/
+playwright_test_generator -- crea o extiende cypress/e2e/<feature>/*.cy.js
         |
         v
-Playwright Test -- ejecución sin IA
+Cypress -- ejecución sin IA
         |
         v
 playwright_test_healer -- corrige fallos cuando sea necesario
@@ -128,8 +128,8 @@ sección `Automation Handoff` con:
 - Datos de prueba y dependencias de sesión.
 
 El generator usa este handoff para evitar una segunda exploración con Playwright
-MCP. Durante Automation debe revisar primero `pages/`, `helpers/` y
-`tests/<feature>/`.
+MCP. Durante Automation debe revisar primero `cypress/pages/`, `cypress/support/` y
+`cypress/e2e/<feature>/`.
 
 ## POM, helpers y specs
 
@@ -148,11 +148,14 @@ Antes de crear archivos nuevos, el generator debe:
 La estructura esperada es:
 
 ```text
-pages/                         # Page Objects compartidos
-helpers/                       # utilidades reutilizables
-tests/<feature>/*.spec.ts      # suite por feature
+ cypress/pages/                # Page Objects por página
+ cypress/support/              # commands, setup y helpers compartidos
+cypress/e2e/<feature>/*.cy.js # suite Cypress por feature
+cypress/pages/*.js            # page objects por página
+cypress/support/*.js          # commands, setup y helpers compartidos
+cypress/fixtures/             # datos de fixture
 specs/<feature>.md             # plan y test cases aprobados
-fixtures/                      # fixtures Playwright
+cypress/support/               # page objects y helpers Cypress
 ```
 
 ## Ejecutar tests sin Codex
@@ -168,19 +171,19 @@ npm run test:regression
 Una feature específica:
 
 ```powershell
-npx playwright test tests/plp
+npx cypress run --spec cypress/e2e/plp/**/*.cy.js
 ```
 
 Modo visible:
 
 ```powershell
-npx playwright test tests/plp --headed
+npx cypress open
 ```
 
 Proyecto mobile:
 
 ```powershell
-npx playwright test tests/plp --project=mobile-chrome
+Mobile web se valida con `cy.viewport()` dentro de los escenarios Cypress.
 ```
 
 ## Healer
@@ -199,7 +202,7 @@ fallo no se clasifica automáticamente como defecto de producto.
 
 ## Evidencia y artefactos
 
-Playwright puede generar reportes, screenshots, traces y videos en `artifacts/`.
+Cypress puede generar screenshots y videos en `artifacts/`.
 Estos archivos son generados y no deben contener secretos. La evidencia debe
 referenciar URL, test, pasos, resultado y contexto suficiente para reproducir
 el hallazgo.

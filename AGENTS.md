@@ -81,18 +81,19 @@ The required path is:
 
 `config/<feature>.yaml` → `playwright-test-planner` → human approval → test
 cases in `specs/<feature>.md` → exploratory testing →
-`playwright-test-generator` → `tests/<feature>/` → Playwright execution →
+`playwright-test-generator` → `cypress/e2e/<feature>/*.cy.js` → Cypress execution →
 `playwright-test-healer` when needed.
 
 Do not add a second local orchestration engine or duplicate agent implementations.
 
 ---
 
-## 5. Playwright
+## 5. Browser tooling and automation
 
-Playwright is the primary browser automation and E2E testing technology.
+Playwright MCP remains the exploration technology. Cypress JavaScript is the
+offline automation and E2E execution technology.
 
-Use Playwright for:
+Use Playwright MCP for exploration and evidence collection:
 
 * Browser navigation
 * UI interaction
@@ -100,18 +101,17 @@ Use Playwright for:
 * Assertions
 * Screenshots
 * Traces
-* Test execution
-* Generated automated tests
+* Live browser interaction
 * Responsive/mobile web testing
 
 Use **Playwright MCP** when an agent needs to interact with and explore a live browser application.
 
-Use **Playwright Test** when creating and executing reproducible automated tests.
+Use **Cypress JavaScript** when creating and executing reproducible automated tests.
 
 Keep these responsibilities conceptually separate:
 
 * MCP → agent-driven exploration and interaction
-* Playwright Test → deterministic automated test execution
+* Cypress → deterministic automated test execution
 
 Prefer stable, user-observable selectors and behavior.
 
@@ -121,7 +121,7 @@ Do not rely on implementation-specific selectors when better user-facing selecto
 
 ## 6. Mobile
 
-The MVP supports **mobile web testing** through Playwright device emulation.
+The MVP supports **mobile web testing** through Cypress viewport configuration.
 
 Native mobile application testing is out of scope for the MVP.
 
@@ -173,7 +173,7 @@ Examples include:
 Avoid relying exclusively on free-form text when information will be consumed by another stage of the workflow.
 
 The approved Markdown plan under `specs/` is the human-readable contract for
-test scenarios and cases. Generated Playwright tests under `tests/` are the
+test scenarios and cases. Generated Cypress tests under `cypress/e2e/` are the
 executable contract. Do not create parallel JSON/YAML test-case contracts.
 
 ---
@@ -307,7 +307,7 @@ When executing a QA workflow:
 8. Close the browser after exploration, including a best-effort close on error.
 9. Activate `playwright-test-generator` using that handoff; do not rediscover
    selectors with MCP. Extend related POMs/specs instead of duplicating them.
-10. Execute the Playwright suite.
+10. Execute the Cypress suite.
 11. Activate `playwright-test-healer` on failures.
 12. Analyze failures and produce the QA report.
 

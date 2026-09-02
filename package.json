@@ -8,11 +8,11 @@
   },
   "scripts": {
     "qa:agents:init": "playwright init-agents --loop=codex",
-    "test": "playwright test",
-    "test:all": "playwright test",
-    "test:regression": "playwright test --grep @regression",
-    "test:smoke": "playwright test --grep @smoke",
-    "test:sanity": "playwright test --grep @sanity"
+    "test": "cypress run",
+    "test:all": "cypress run",
+    "test:regression": "cypress run --env grepTags=@regression",
+    "test:smoke": "cypress run --env grepTags=@smoke",
+    "test:sanity": "cypress run --env grepTags=@sanity"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.4.0",
+    "cypress": "^15.2.0",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   },
